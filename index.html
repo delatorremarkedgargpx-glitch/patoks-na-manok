@@ -33,6 +33,12 @@
   <style>
     body { background-color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
     .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); border: 1px solid #e2e8f0; }
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
+    input[type=number] { -moz-appearance: textfield; }
   </style>
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col">
@@ -255,37 +261,42 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-          <!-- 1. Supplier Delivery Form (Owner Only) -->
-          <div class="owner-only bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <!-- 1. Supplier Delivery Form (Owner & Cashier) -->
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
             <div class="flex items-center justify-between border-b pb-3">
               <h3 class="font-bold text-slate-900 flex items-center gap-2">
                 <i class="fa-solid fa-truck text-blue-600"></i> Record Supplier Delivery
               </h3>
               <span class="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded font-semibold">+ Adds to Raw</span>
             </div>
-            <form onsubmit="app.handleTransaction(event, 'RECEIVE')" class="space-y-3">
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-xs font-bold text-slate-600 mb-1">Date</label>
-                  <input type="date" name="event_date" required class="input-date w-full px-3 py-2 border rounded-lg text-sm">
-                </div>
-                <div>
-                  <label class="block text-xs font-bold text-slate-600 mb-1">Quantity Received</label>
-                  <input type="number" name="quantity" min="1" required class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="e.g. 20">
+            <form onsubmit="app.handleTransaction(event, 'RECEIVE')" class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Target Date</label>
+                <input type="date" name="event_date" required class="input-date w-full px-3 py-2 border rounded-xl text-sm font-semibold">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Quantity Ordered / Received</label>
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="app.stepQty(this, -1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">-</button>
+                  <input type="number" name="quantity" min="1" value="1" required class="w-full py-2 border rounded-xl text-center font-black text-xl text-slate-900 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                  <button type="button" onclick="app.stepQty(this, 1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">+</button>
                 </div>
               </div>
+
               <div>
                 <label class="block text-xs font-bold text-slate-600 mb-1">Supplier Name (Optional)</label>
-                <input type="text" name="notes" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="e.g. Bounty Fresh">
+                <input type="text" name="notes" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. Bounty Fresh">
               </div>
-              <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-sm transition">
+
+              <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-md shadow-blue-600/20 active:scale-98">
                 Save Delivery Entry
               </button>
             </form>
           </div>
 
-          <!-- 2. Preparation Form (Owner Only) -->
-          <div class="owner-only bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <!-- 2. Preparation Form (Owner & Cashier) -->
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
             <div class="flex items-center justify-between border-b pb-3">
               <h3 class="font-bold text-slate-900 flex items-center gap-2">
                 <i class="fa-solid fa-fire text-amber-600"></i> Record Preparation / Marinating
@@ -293,22 +304,27 @@
               <span class="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded font-semibold">Raw ➔ Prepared</span>
             </div>
             <div class="text-xs text-slate-500">Available Raw Stock: <strong class="text-slate-800 quick-avail-raw">0</strong></div>
-            <form onsubmit="app.handleTransaction(event, 'PREPARE')" class="space-y-3">
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-xs font-bold text-slate-600 mb-1">Date</label>
-                  <input type="date" name="event_date" required class="input-date w-full px-3 py-2 border rounded-lg text-sm">
-                </div>
-                <div>
-                  <label class="block text-xs font-bold text-slate-600 mb-1">Quantity Prepared</label>
-                  <input type="number" name="quantity" min="1" required class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="e.g. 8">
+            <form onsubmit="app.handleTransaction(event, 'PREPARE')" class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Target Date</label>
+                <input type="date" name="event_date" required class="input-date w-full px-3 py-2 border rounded-xl text-sm font-semibold">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Quantity Prepared / Marinated</label>
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="app.stepQty(this, -1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">-</button>
+                  <input type="number" name="quantity" min="1" value="1" required class="w-full py-2 border rounded-xl text-center font-black text-xl text-slate-900 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                  <button type="button" onclick="app.stepQty(this, 1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">+</button>
                 </div>
               </div>
+
               <div>
                 <label class="block text-xs font-bold text-slate-600 mb-1">Notes (Optional)</label>
-                <input type="text" name="notes" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="e.g. Batch #1 Special Marinate">
+                <input type="text" name="notes" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. Batch #1 Special Marinate">
               </div>
-              <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2 rounded-lg text-sm transition">
+
+              <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-md shadow-amber-600/20 active:scale-98">
                 Move Raw to Prepared
               </button>
             </form>
@@ -323,22 +339,27 @@
               <span class="text-xs bg-flame-50 text-flame-700 px-2 py-0.5 rounded font-semibold">- Deducts Prepared</span>
             </div>
             <div class="text-xs text-slate-500">Available Prepared Stock: <strong class="text-slate-800 quick-avail-prepared">0</strong></div>
-            <form onsubmit="app.handleTransaction(event, 'SELL')" class="space-y-3">
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-xs font-bold text-slate-600 mb-1">Date</label>
-                  <input type="date" name="event_date" required class="input-date w-full px-3 py-2 border rounded-lg text-sm">
-                </div>
-                <div>
-                  <label class="block text-xs font-bold text-slate-600 mb-1">Quantity Sold</label>
-                  <input type="number" name="quantity" min="1" required class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="e.g. 3">
+            <form onsubmit="app.handleTransaction(event, 'SELL')" class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Target Date</label>
+                <input type="date" name="event_date" required class="input-date w-full px-3 py-2 border rounded-xl text-sm font-semibold">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Quantity Sold</label>
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="app.stepQty(this, -1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">-</button>
+                  <input type="number" name="quantity" min="1" value="1" required class="w-full py-2 border rounded-xl text-center font-black text-xl text-slate-900 focus:ring-2 focus:ring-flame-500 focus:outline-none">
+                  <button type="button" onclick="app.stepQty(this, 1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">+</button>
                 </div>
               </div>
+
               <div>
                 <label class="block text-xs font-bold text-slate-600 mb-1">Notes (Optional)</label>
-                <input type="text" name="notes" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="e.g. Lunch shift sales">
+                <input type="text" name="notes" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. Lunch shift sales">
               </div>
-              <button type="submit" class="w-full bg-flame-600 hover:bg-flame-700 text-white font-bold py-2 rounded-lg text-sm transition">
+
+              <button type="submit" class="w-full bg-flame-600 hover:bg-flame-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-md shadow-flame-600/20 active:scale-98">
                 Record Sale
               </button>
             </form>
@@ -352,29 +373,36 @@
               </h3>
               <span class="text-xs bg-red-50 text-red-700 px-2 py-0.5 rounded font-semibold">Stage Deduct</span>
             </div>
-            <form onsubmit="app.handleTransaction(event, 'DISPOSE')" class="space-y-3">
-              <div class="grid grid-cols-3 gap-3">
+            <form onsubmit="app.handleTransaction(event, 'DISPOSE')" class="space-y-4">
+              <div class="grid grid-cols-2 gap-3">
                 <div>
-                  <label class="block text-xs font-bold text-slate-600 mb-1">Date</label>
-                  <input type="date" name="event_date" required class="input-date w-full px-3 py-2 border rounded-lg text-sm">
+                  <label class="block text-xs font-bold text-slate-600 mb-1">Target Date</label>
+                  <input type="date" name="event_date" required class="input-date w-full px-3 py-2 border rounded-xl text-sm font-semibold">
                 </div>
                 <div>
                   <label class="block text-xs font-bold text-slate-600 mb-1">Stock Stage</label>
-                  <select name="stage" required class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
+                  <select name="stage" required class="w-full px-3 py-2 border rounded-xl text-sm bg-white font-medium">
                     <option value="PREPARED">Prepared Stock</option>
                     <option value="RAW">Raw Stock</option>
                   </select>
                 </div>
-                <div>
-                  <label class="block text-xs font-bold text-slate-600 mb-1">Quantity (≥ 0)</label>
-                  <input type="number" name="quantity" min="0" value="0" required class="w-full px-3 py-2 border rounded-lg text-sm">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Quantity Disposed (≥ 0)</label>
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="app.stepQty(this, -1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">-</button>
+                  <input type="number" name="quantity" min="0" value="0" required class="w-full py-2 border rounded-xl text-center font-black text-xl text-slate-900 focus:ring-2 focus:ring-red-500 focus:outline-none">
+                  <button type="button" onclick="app.stepQty(this, 1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">+</button>
                 </div>
               </div>
+
               <div>
                 <label class="block text-xs font-bold text-slate-600 mb-1">Reason / Notes (Optional)</label>
-                <input type="text" name="notes" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="e.g. Overcooked or damaged">
+                <input type="text" name="notes" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. Overcooked or damaged">
               </div>
-              <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 rounded-lg text-sm transition">
+
+              <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl text-sm transition shadow-md active:scale-98">
                 Record Disposal
               </button>
             </form>
@@ -474,7 +502,7 @@
                   <th class="p-3">User</th>
                   <th class="p-3">Notes</th>
                   <th class="p-3">Status</th>
-                  <th class="p-3 text-center owner-only">Action</th>
+                  <th class="p-3 text-center owner-only">Action (Owner Only)</th>
                 </tr>
               </thead>
               <tbody id="ledger-tbody" class="divide-y divide-slate-100">
@@ -564,7 +592,7 @@
     Patoks Na Manok POS & Inventory System &bull; Multi-Device Server Sync Edition
   </footer>
 
-  <!-- SYSTEM JAVASCRIPT LOGIC WITH SERVER AUTO-SYNC -->
+  <!-- SYSTEM JAVASCRIPT LOGIC -->
   <script>
     class PatoksInventoryApp {
       constructor() {
@@ -574,7 +602,17 @@
         this.initClock();
       }
 
-      // --- SERVER MULTI-DEVICE SYNC ---
+      stepQty(btn, amount) {
+        const input = btn.parentNode.querySelector('input[type="number"]');
+        if (!input) return;
+        const current = parseInt(input.value) || 0;
+        const min = parseInt(input.getAttribute('min')) || 0;
+        const updated = current + amount;
+        if (updated >= min) {
+          input.value = updated;
+        }
+      }
+
       async loadDatabase() {
         try {
           const res = await fetch('/api/db');
@@ -588,7 +626,6 @@
           console.warn('Server sync unavailable, loading local cache', e);
         }
 
-        // Fallback to local storage if offline
         const raw = localStorage.getItem(this.STORAGE_KEY);
         if (raw) {
           try { this.db = JSON.parse(raw); } catch(e) {}
@@ -600,7 +637,6 @@
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.db));
         this.refreshUI();
 
-        // Push to server database for all other devices
         try {
           await fetch('/api/db', {
             method: 'POST',
@@ -613,14 +649,12 @@
       }
 
       startAutoSync() {
-        // Poll server every 3 seconds to get updates made by other devices
         setInterval(async () => {
-          if (!this.currentUser) return; // Only sync when logged in
+          if (!this.currentUser) return;
           try {
             const res = await fetch('/api/db');
             if (res.ok) {
               const latestData = await res.json();
-              // Check if database updated
               if (JSON.stringify(latestData.ledger) !== JSON.stringify(this.db.ledger) ||
                   JSON.stringify(latestData.users) !== JSON.stringify(this.db.users)) {
                 this.db = latestData;
@@ -632,12 +666,11 @@
         }, 3000);
       }
 
-      // Manila Time Helper
       getManilaDate() {
         const now = new Date();
         const options = { timeZone: 'Asia/Manila', year: 'numeric', month: '2-digit', day: '2-digit' };
         const formatter = new Intl.DateTimeFormat('en-CA', options);
-        return formatter.format(now); // Output format: YYYY-MM-DD
+        return formatter.format(now);
       }
 
       getManilaTimestamp() {
@@ -653,7 +686,6 @@
         setInterval(updateClock, 1000);
       }
 
-      // Helper to Hash Passwords
       async hashPassword(password) {
         const msgBuffer = new TextEncoder().encode(password + "_patoks_salt");
         const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -661,7 +693,6 @@
         return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
       }
 
-      // Initialize Views
       async init() {
         await this.loadDatabase();
         if (!this.db.initialized) {
@@ -706,7 +737,6 @@
         document.getElementById('alert-banner').classList.add('hidden');
       }
 
-      // --- AUTHENTICATION & SETUP ---
       async handleFirstSetup(e) {
         e.preventDefault();
         const username = document.getElementById('setup-username').value.trim();
@@ -720,7 +750,6 @@
         this.db.initialized = true;
         this.db.ledger = [];
 
-        // Save opening stocks as initial transactions
         const manilaToday = this.getManilaDate();
         if (rawQty > 0) {
           this.db.ledger.push({
@@ -756,7 +785,7 @@
 
       async handleLogin(e) {
         e.preventDefault();
-        await this.loadDatabase(); // Refresh latest users
+        await this.loadDatabase();
         const username = document.getElementById('login-username').value.trim();
         const password = document.getElementById('login-password').value;
 
@@ -780,7 +809,6 @@
           badge.className = 'text-xs font-semibold px-2 py-0.5 rounded-full inline-block bg-slate-700 text-slate-200';
         }
 
-        // Apply RBAC UI hiding
         document.querySelectorAll('.owner-only').forEach(el => {
           if (user.role === 'OWNER') el.classList.remove('hidden');
           else el.classList.add('hidden');
@@ -820,7 +848,6 @@
         this.showAlert('success', 'Account Created', `Cashier account '${username}' registered.`);
       }
 
-      // --- LEDGER ENGINE & BALANCE CALCULATIONS ---
       calculateBalances(upToDate = null) {
         let rawRemaining = 0;
         let preparedRemaining = 0;
@@ -862,7 +889,6 @@
         };
       }
 
-      // Transaction Handler with Strict Validation
       async handleTransaction(e, type) {
         e.preventDefault();
         const form = e.target;
@@ -873,7 +899,6 @@
         const stage = formData.get('stage') || (type === 'RECEIVE' ? 'RAW' : 'PREPARED');
         const notes = formData.get('notes') || '';
 
-        // Validation Rules
         if (!event_date) {
           return this.showAlert('danger', 'Validation Error', 'Event date is required.');
         }
@@ -886,11 +911,9 @@
           return this.showAlert('danger', 'Validation Error', 'Disposal quantity cannot be negative.');
         }
 
-        // Pull fresh DB before transaction to prevent concurrency collision
         await this.loadDatabase();
         const currentBal = this.calculateBalances();
 
-        // Stock Limit Verification
         if (type === 'PREPARE' && quantity > currentBal.rawRemaining) {
           return this.showAlert('danger', 'Transaction Rejected', `Cannot prepare ${quantity} chickens. Only ${currentBal.rawRemaining} raw chickens available.`);
         }
@@ -908,7 +931,6 @@
           }
         }
 
-        // Add Transaction
         const newTx = {
           id: 'TX-' + Date.now(),
           type,
@@ -927,16 +949,15 @@
         form.reset();
         document.querySelectorAll('.input-date').forEach(el => el.value = this.getManilaDate());
         
-        this.showAlert('success', 'Transaction Recorded', `${type} transaction saved & synced across all devices.`);
+        this.showAlert('success', 'Transaction Recorded', `${type} entry recorded for ${event_date}.`);
       }
 
-      // Reversal / Correction Handler (Owner Only)
       async reverseTransaction(txId) {
         if (!this.currentUser || this.currentUser.role !== 'OWNER') {
-          return this.showAlert('danger', 'Access Denied', 'Only Owners can reverse transactions.');
+          return this.showAlert('danger', 'Access Denied', 'Only Owners can revise or reverse backend transactions.');
         }
 
-        const reason = prompt('Enter reason for transaction reversal / correction:');
+        const reason = prompt('Enter reason for transaction revision / reversal:');
         if (!reason) return;
 
         await this.loadDatabase();
@@ -948,11 +969,10 @@
           targetTx.reversal_reason = reason;
 
           await this.saveDatabase();
-          this.showAlert('success', 'Correction Logged', `Transaction ${txId} has been reversed.`);
+          this.showAlert('success', 'Revision Saved', `Transaction ${txId} has been reversed by Owner.`);
         }
       }
 
-      // --- UI REFRESH & TAB NAVIGATION ---
       switchTab(tabId) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
         document.querySelectorAll('nav button').forEach(el => {
@@ -975,7 +995,6 @@
         const bal = this.calculateBalances();
         const manilaToday = this.getManilaDate();
 
-        // Update Dashboard Live Stocks
         const rawEl = document.getElementById('dash-raw-stock');
         const prepEl = document.getElementById('dash-prepared-stock');
         const totEl = document.getElementById('dash-total-stock');
@@ -984,16 +1003,13 @@
         if (prepEl) prepEl.innerText = bal.preparedRemaining;
         if (totEl) totEl.innerText = bal.totalRemaining;
 
-        // Quick Entry Available Stock Labels
         document.querySelectorAll('.quick-avail-raw').forEach(el => el.innerText = bal.rawRemaining);
         document.querySelectorAll('.quick-avail-prepared').forEach(el => el.innerText = bal.preparedRemaining);
 
-        // Populate Date Inputs with Manila Date default if empty
         document.querySelectorAll('.input-date').forEach(el => {
           if (!el.value) el.value = manilaToday;
         });
 
-        // Dashboard Today Summary
         const dateLabel = document.getElementById('dash-date-label');
         if (dateLabel) dateLabel.innerText = manilaToday;
 
@@ -1011,7 +1027,6 @@
         document.getElementById('dash-today-sold').innerText = soldToday;
         document.getElementById('dash-today-disposed').innerText = dispToday;
 
-        // Render Tables & Sub-views
         this.renderDailySummary();
         this.renderLedgerTable();
         this.renderUserAccounts();
@@ -1113,7 +1128,7 @@
                 ${isRev ? '<span class="text-red-600 font-bold">REVERSED</span>' : '<span class="text-emerald-600 font-bold">ACTIVE</span>'}
               </td>
               <td class="p-3 text-center ${isOwner ? '' : 'hidden'}">
-                ${!isRev ? `<button onclick="app.reverseTransaction('${tx.id}')" class="text-red-600 hover:text-red-800 font-bold underline text-[11px]">Reverse</button>` : '-'}
+                ${!isRev ? `<button onclick="app.reverseTransaction('${tx.id}')" class="text-red-600 hover:text-red-800 font-bold underline text-[11px]">Revise / Reverse</button>` : '-'}
               </td>
             </tr>
           `;
@@ -1135,7 +1150,6 @@
         `).join('');
       }
 
-      // --- BACKUP AND RESTORE ---
       downloadBackup() {
         if (!this.currentUser || this.currentUser.role !== 'OWNER') {
           return this.showAlert('danger', 'Access Denied', 'Owner permission required.');
@@ -1178,7 +1192,6 @@
         reader.readAsText(file);
       }
 
-      // --- AUTOMATED 10 ACCEPTANCE CHECKS SUITE ---
       runAcceptanceChecks() {
         const results = [];
         const originalDB = JSON.parse(JSON.stringify(this.db));
@@ -1267,7 +1280,7 @@
 
         const body = document.getElementById('test-results-body');
         body.innerHTML = results.map(r => `
-          <div class="p-3 rounded-lg border ${r.pass ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'}">
+          <div class="p-3 rounded-lg border ${r.pass ? 'pass' ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'}">
             <div class="flex items-center justify-between font-bold text-sm ${r.pass ? 'text-emerald-900' : 'text-red-900'}">
               <span>${r.step}</span>
               <span class="px-2 py-0.5 rounded text-[10px] ${r.pass ? 'bg-emerald-200 text-emerald-800' : 'bg-red-200 text-red-800'}">${r.pass ? 'PASS' : 'FAIL'}</span>

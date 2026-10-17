@@ -1,7 +1,7 @@
 {
   "name": "patoks-na-manok",
-  "version": "1.1.0",
-  "description": "Patoks Na Manok - Multi-Device Sales & Chicken Inventory System",
+  "version": "1.2.0",
+  "description": "Patoks Na Manok - POS & Chicken Inventory System with Cashier Stepper UI",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

@@ -1,6 +1,6 @@
 # Patoks Na Manok - Sales & Chicken Inventory System
 
-Updated **v1.2.0**:
-- **Cashier Permissions Expanded**: Cashiers can now record Supplier Deliveries & Preparation/Marinating entries (bound by selected date).
-- **Owner Revision Protection**: Reversing, correcting, or editing transaction entries remains strictly restricted to the Owner on the back end.
-- **Touch-Friendly Stepper UI (+ / -)**: Added tap-friendly plus (`+`) and minus (`-`) buttons on all entry quantity inputs for seamless mobile and POS operation.
+Updated **v1.2.1**:
+- **Blank Screen Fix**: Added safety fallback in `app.init()` so view initialization (`view-setup` or `view-login`) always renders immediately, preventing blank body loading screens.
+- **Clock Display Sync**: Fixed clock timer initialization after DOM content is ready.
+- **Cashier Stepper Controls**: Large touch-friendly `[ - ]` and `[ + ]` quantity stepper buttons for mobile POS usability.

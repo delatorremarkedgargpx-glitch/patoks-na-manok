@@ -9,9 +9,13 @@ const HOST = '0.0.0.0';
 const DB_FILE = path.join(__dirname, 'db.json');
 
 // Initialize central db.json if missing
-if (!fs.existsSync(DB_FILE)) {
-  fs.writeFileSync(DB_FILE, JSON.stringify({ initialized: false, users: [], ledger: [] }, null, 2));
+function initDB() {
+  if (!fs.existsSync(DB_FILE)) {
+    const initialData = { initialized: false, users: [], ledger: [] };
+    fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
+  }
 }
+initDB();
 
 const server = http.createServer((req, res) => {
   // CORS Headers
@@ -24,21 +28,24 @@ const server = http.createServer((req, res) => {
     return res.end();
   }
 
+  const cleanUrl = req.url.split('?')[0];
+
   // API Route: Get Database
-  if (req.url === '/api/db' && req.method === 'GET') {
+  if (cleanUrl === '/api/db' && req.method === 'GET') {
+    initDB();
     fs.readFile(DB_FILE, 'utf-8', (err, data) => {
       if (err) {
         res.writeHead(500, { 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({ error: 'Failed to read database' }));
       }
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(data);
+      res.end(data || JSON.stringify({ initialized: false, users: [], ledger: [] }));
     });
     return;
   }
 
   // API Route: Save Database
-  if (req.url === '/api/db' && req.method === 'POST') {
+  if (cleanUrl === '/api/db' && req.method === 'POST') {
     let body = '';
     req.on('data', chunk => { body += chunk.toString(); });
     req.on('end', () => {
@@ -56,7 +63,9 @@ const server = http.createServer((req, res) => {
   }
 
   // Serve Static Files
-  let filePath = path.join(__dirname, req.url === '/' ? 'index.html' : req.url);
+  let reqPath = cleanUrl === '/' ? 'index.html' : cleanUrl;
+  let filePath = path.join(__dirname, reqPath);
+
   if (!filePath.startsWith(__dirname)) {
     res.writeHead(403, { 'Content-Type': 'text/plain' });
     return res.end('403 Forbidden');
@@ -64,8 +73,21 @@ const server = http.createServer((req, res) => {
 
   fs.readFile(filePath, (err, content) => {
     if (err) {
-      res.writeHead(err.code === 'ENOENT' ? 404 : 500, { 'Content-Type': 'text/plain' });
-      res.end(err.code === 'ENOENT' ? '404 Not Found' : `Server Error: ${err.code}`);
+      if (err.code === 'ENOENT') {
+        // Fallback to index.html for SPA routing safety
+        fs.readFile(path.join(__dirname, 'index.html'), (indexErr, indexContent) => {
+          if (indexErr) {
+            res.writeHead(404, { 'Content-Type': 'text/plain' });
+            res.end('404 Not Found');
+          } else {
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end(indexContent, 'utf-8');
+          }
+        });
+      } else {
+        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        res.end(`Server Error: ${err.code}`);
+      }
     } else {
       let extname = path.extname(filePath);
       let contentType = 'text/html';

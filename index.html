@@ -599,7 +599,6 @@
         this.STORAGE_KEY = 'patoks_chicken_inventory_db_v1';
         this.currentUser = null;
         this.db = { initialized: false, users: [], ledger: [] };
-        this.initClock();
       }
 
       stepQty(btn, amount) {
@@ -618,9 +617,11 @@
           const res = await fetch('/api/db');
           if (res.ok) {
             const serverData = await res.json();
-            this.db = serverData;
-            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(serverData));
-            return serverData;
+            if (serverData && typeof serverData === 'object') {
+              this.db = serverData;
+              localStorage.setItem(this.STORAGE_KEY, JSON.stringify(serverData));
+              return serverData;
+            }
           }
         } catch (e) {
           console.warn('Server sync unavailable, loading local cache', e);
@@ -628,12 +629,16 @@
 
         const raw = localStorage.getItem(this.STORAGE_KEY);
         if (raw) {
-          try { this.db = JSON.parse(raw); } catch(e) {}
+          try { 
+            const cached = JSON.parse(raw);
+            if (cached && typeof cached === 'object') this.db = cached;
+          } catch(e) {}
         }
         return this.db;
       }
 
       async saveDatabase() {
+        if (!this.db) this.db = { initialized: false, users: [], ledger: [] };
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.db));
         this.refreshUI();
 
@@ -655,8 +660,7 @@
             const res = await fetch('/api/db');
             if (res.ok) {
               const latestData = await res.json();
-              if (JSON.stringify(latestData.ledger) !== JSON.stringify(this.db.ledger) ||
-                  JSON.stringify(latestData.users) !== JSON.stringify(this.db.users)) {
+              if (latestData && JSON.stringify(latestData.ledger) !== JSON.stringify(this.db.ledger)) {
                 this.db = latestData;
                 localStorage.setItem(this.STORAGE_KEY, JSON.stringify(latestData));
                 this.refreshUI();
@@ -694,13 +698,19 @@
       }
 
       async init() {
-        await this.loadDatabase();
-        if (!this.db.initialized) {
-          this.showView('view-setup');
-        } else {
-          this.showView('view-login');
+        this.initClock();
+        try {
+          await this.loadDatabase();
+        } catch(e) {
+          console.error("Database initialization error:", e);
+        } finally {
+          if (!this.db || !this.db.initialized) {
+            this.showView('view-setup');
+          } else {
+            this.showView('view-login');
+          }
+          this.startAutoSync();
         }
-        this.startAutoSync();
       }
 
       showView(viewId) {
@@ -715,6 +725,8 @@
         const icon = document.getElementById('alert-icon');
         const titleEl = document.getElementById('alert-title');
         const msgEl = document.getElementById('alert-msg');
+
+        if (!banner || !icon || !titleEl || !msgEl) return;
 
         banner.className = `mb-6 p-4 rounded-xl border flex items-start gap-3 shadow-sm transition-all duration-300 `;
         if (type === 'success') {
@@ -734,7 +746,8 @@
       }
 
       hideAlert() {
-        document.getElementById('alert-banner').classList.add('hidden');
+        const banner = document.getElementById('alert-banner');
+        if (banner) banner.classList.add('hidden');
       }
 
       async handleFirstSetup(e) {
@@ -746,9 +759,11 @@
 
         const hashedPassword = await this.hashPassword(password);
         
-        this.db.users = [{ username, passwordHash: hashedPassword, role: 'OWNER' }];
-        this.db.initialized = true;
-        this.db.ledger = [];
+        this.db = {
+          initialized: true,
+          users: [{ username, passwordHash: hashedPassword, role: 'OWNER' }],
+          ledger: []
+        };
 
         const manilaToday = this.getManilaDate();
         if (rawQty > 0) {
@@ -790,7 +805,7 @@
         const password = document.getElementById('login-password').value;
 
         const hashed = await this.hashPassword(password);
-        const user = this.db.users.find(u => u.username === username && u.passwordHash === hashed);
+        const user = (this.db.users || []).find(u => u.username === username && u.passwordHash === hashed);
 
         if (!user) {
           this.showAlert('danger', 'Login Failed', 'Invalid username or password.');
@@ -835,7 +850,7 @@
         const username = document.getElementById('new-cashier-username').value.trim();
         const password = document.getElementById('new-cashier-password').value;
 
-        if (this.db.users.some(u => u.username === username)) {
+        if ((this.db.users || []).some(u => u.username === username)) {
           return this.showAlert('danger', 'Error', 'Username already exists.');
         }
 
@@ -852,7 +867,7 @@
         let rawRemaining = 0;
         let preparedRemaining = 0;
 
-        for (const tx of this.db.ledger) {
+        for (const tx of (this.db.ledger || [])) {
           if (tx.reversed) continue;
           if (upToDate && tx.event_date > upToDate) continue;
 
@@ -938,11 +953,12 @@
           stage,
           event_date,
           created_at: this.getManilaTimestamp(),
-          created_by: this.currentUser.username,
+          created_by: this.currentUser ? this.currentUser.username : 'Unknown',
           notes,
           reversed: false
         };
 
+        if (!this.db.ledger) this.db.ledger = [];
         this.db.ledger.push(newTx);
         await this.saveDatabase();
 
@@ -961,7 +977,7 @@
         if (!reason) return;
 
         await this.loadDatabase();
-        const targetTx = this.db.ledger.find(t => t.id === txId);
+        const targetTx = (this.db.ledger || []).find(t => t.id === txId);
         if (targetTx) {
           targetTx.reversed = true;
           targetTx.reversed_by = this.currentUser.username;
@@ -1014,7 +1030,7 @@
         if (dateLabel) dateLabel.innerText = manilaToday;
 
         let recvToday = 0, prepToday = 0, soldToday = 0, dispToday = 0;
-        this.db.ledger.forEach(tx => {
+        (this.db.ledger || []).forEach(tx => {
           if (tx.reversed || tx.event_date !== manilaToday) return;
           if (tx.type === 'RECEIVE') recvToday += tx.quantity;
           if (tx.type === 'PREPARE') prepToday += tx.quantity;
@@ -1022,10 +1038,15 @@
           if (tx.type === 'DISPOSE') dispToday += tx.quantity;
         });
 
-        document.getElementById('dash-today-received').innerText = recvToday;
-        document.getElementById('dash-today-prepared').innerText = prepToday;
-        document.getElementById('dash-today-sold').innerText = soldToday;
-        document.getElementById('dash-today-disposed').innerText = dispToday;
+        const recvEl = document.getElementById('dash-today-received');
+        const prepTodayEl = document.getElementById('dash-today-prepared');
+        const soldEl = document.getElementById('dash-today-sold');
+        const dispEl = document.getElementById('dash-today-disposed');
+
+        if (recvEl) recvEl.innerText = recvToday;
+        if (prepTodayEl) prepTodayEl.innerText = prepToday;
+        if (soldEl) soldEl.innerText = soldToday;
+        if (dispEl) dispEl.innerText = dispToday;
 
         this.renderDailySummary();
         this.renderLedgerTable();
@@ -1042,7 +1063,7 @@
         let rawRecv = 0, rawPrep = 0, rawDisp = 0;
         let prepSold = 0, prepDisp = 0;
 
-        this.db.ledger.forEach(tx => {
+        (this.db.ledger || []).forEach(tx => {
           if (tx.reversed) return;
 
           if (tx.event_date < selDate) {
@@ -1070,21 +1091,26 @@
         const rawClose = Math.max(0, rawOpen + rawRecv - rawPrep - rawDisp);
         const prepClose = Math.max(0, prepOpen + rawPrep - prepSold - prepDisp);
 
-        document.getElementById('sum-raw-open').innerText = rawOpen;
-        document.getElementById('sum-raw-recv').innerText = rawRecv;
-        document.getElementById('sum-raw-prep').innerText = rawPrep;
-        document.getElementById('sum-raw-disp').innerText = rawDisp;
-        document.getElementById('sum-raw-close').innerText = rawClose;
+        const elemIds = {
+          'sum-raw-open': rawOpen,
+          'sum-raw-recv': rawRecv,
+          'sum-raw-prep': rawPrep,
+          'sum-raw-disp': rawDisp,
+          'sum-raw-close': rawClose,
+          'sum-prep-open': prepOpen,
+          'sum-prep-from-raw': rawPrep,
+          'sum-prep-sold': prepSold,
+          'sum-prep-disp': prepDisp,
+          'sum-prep-close': prepClose,
+          'sum-tot-raw': rawClose,
+          'sum-tot-prep': prepClose,
+          'sum-tot-close': rawClose + prepClose
+        };
 
-        document.getElementById('sum-prep-open').innerText = prepOpen;
-        document.getElementById('sum-prep-from-raw').innerText = rawPrep;
-        document.getElementById('sum-prep-sold').innerText = prepSold;
-        document.getElementById('sum-prep-disp').innerText = prepDisp;
-        document.getElementById('sum-prep-close').innerText = prepClose;
-
-        document.getElementById('sum-tot-raw').innerText = rawClose;
-        document.getElementById('sum-tot-prep').innerText = prepClose;
-        document.getElementById('sum-tot-close').innerText = rawClose + prepClose;
+        for (let id in elemIds) {
+          const el = document.getElementById(id);
+          if (el) el.innerText = elemIds[id];
+        }
       }
 
       renderLedgerTable() {
@@ -1094,7 +1120,7 @@
         const filterDate = document.getElementById('ledger-filter-date')?.value;
         const isOwner = this.currentUser && this.currentUser.role === 'OWNER';
 
-        let rows = [...this.db.ledger];
+        let rows = [...(this.db.ledger || [])];
         if (filterDate) {
           rows = rows.filter(r => r.event_date === filterDate);
         }
@@ -1139,7 +1165,7 @@
         const container = document.getElementById('user-accounts-list');
         if (!container) return;
 
-        container.innerHTML = this.db.users.map(u => `
+        container.innerHTML = (this.db.users || []).map(u => `
           <div class="flex justify-between items-center bg-slate-50 p-2.5 rounded-lg border text-xs">
             <div class="flex items-center gap-2">
               <i class="fa-solid fa-user-circle text-slate-400 text-base"></i>
@@ -1279,22 +1305,27 @@
         }
 
         const body = document.getElementById('test-results-body');
-        body.innerHTML = results.map(r => `
-          <div class="p-3 rounded-lg border ${r.pass ? 'pass' ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'}">
-            <div class="flex items-center justify-between font-bold text-sm ${r.pass ? 'text-emerald-900' : 'text-red-900'}">
-              <span>${r.step}</span>
-              <span class="px-2 py-0.5 rounded text-[10px] ${r.pass ? 'bg-emerald-200 text-emerald-800' : 'bg-red-200 text-red-800'}">${r.pass ? 'PASS' : 'FAIL'}</span>
+        if (body) {
+          body.innerHTML = results.map(r => `
+            <div class="p-3 rounded-lg border ${r.pass ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'}">
+              <div class="flex items-center justify-between font-bold text-sm ${r.pass ? 'text-emerald-900' : 'text-red-900'}">
+                <span>${r.step}</span>
+                <span class="px-2 py-0.5 rounded text-[10px] ${r.pass ? 'bg-emerald-200 text-emerald-800' : 'bg-red-200 text-red-800'}">${r.pass ? 'PASS' : 'FAIL'}</span>
+              </div>
+              <div class="text-slate-600 mt-1">${r.details}</div>
             </div>
-            <div class="text-slate-600 mt-1">${r.details}</div>
-          </div>
-        `).join('');
+          `).join('');
+        }
 
-        document.getElementById('modal-test-results').classList.remove('hidden');
+        const modal = document.getElementById('modal-test-results');
+        if (modal) modal.classList.remove('hidden');
       }
     }
 
     const app = new PatoksInventoryApp();
-    window.addEventListener('DOMContentLoaded', () => app.init());
+    window.addEventListener('DOMContentLoaded', () => {
+      app.init();
+    });
   </script>
 </body>
 </html>

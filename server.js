@@ -1,4 +1,4 @@
-// server.js - Patoks Na Manok Multi-Device Shared Sync Server
+// server.js - Patoks Na Manok Multi-Device Shared Sync Server v1.3.0
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
@@ -8,7 +8,6 @@ const PORT = process.env.PORT || 3000;
 const HOST = '0.0.0.0';
 const DB_FILE = path.join(__dirname, 'db.json');
 
-// Initialize central db.json if missing
 function initDB() {
   if (!fs.existsSync(DB_FILE)) {
     const initialData = { initialized: false, users: [], ledger: [] };
@@ -18,7 +17,6 @@ function initDB() {
 initDB();
 
 const server = http.createServer((req, res) => {
-  // CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -30,7 +28,6 @@ const server = http.createServer((req, res) => {
 
   const cleanUrl = req.url.split('?')[0];
 
-  // API Route: Get Database
   if (cleanUrl === '/api/db' && req.method === 'GET') {
     initDB();
     fs.readFile(DB_FILE, 'utf-8', (err, data) => {
@@ -44,7 +41,6 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // API Route: Save Database
   if (cleanUrl === '/api/db' && req.method === 'POST') {
     let body = '';
     req.on('data', chunk => { body += chunk.toString(); });
@@ -62,7 +58,6 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Serve Static Files
   let reqPath = cleanUrl === '/' ? 'index.html' : cleanUrl;
   let filePath = path.join(__dirname, reqPath);
 
@@ -74,7 +69,6 @@ const server = http.createServer((req, res) => {
   fs.readFile(filePath, (err, content) => {
     if (err) {
       if (err.code === 'ENOENT') {
-        // Fallback to index.html for SPA routing safety
         fs.readFile(path.join(__dirname, 'index.html'), (indexErr, indexContent) => {
           if (indexErr) {
             res.writeHead(404, { 'Content-Type': 'text/plain' });
@@ -105,18 +99,7 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT, HOST, () => {
   console.log(`==================================================`);
-  console.log(`  Patoks Na Manok Multi-Device Server Running!`);
+  console.log(`  Patoks Na Manok System v1.3.0 Running!`);
   console.log(`==================================================`);
-  console.log(`Local Access: http://localhost:${PORT}`);
-  
-  const interfaces = os.networkInterfaces();
-  console.log(`\nLAN Access from other devices on Wi-Fi:`);
-  for (let devName in interfaces) {
-    for (let iface of interfaces[devName]) {
-      if (iface.family === 'IPv4' && !iface.internal) {
-        console.log(`  👉 http://${iface.address}:${PORT}`);
-      }
-    }
-  }
-  console.log(`==================================================\n`);
+  console.log(`Local: http://localhost:${PORT}`);
 });

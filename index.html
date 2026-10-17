@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Patoks Na Manok - Sales & Chicken Inventory System</title>
+  <title>Patoks Na Manok - POS & Chicken Inventory System</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -52,7 +52,7 @@
         </div>
         <div>
           <h1 class="font-black text-xl tracking-tight text-white flex items-center gap-2">
-            PATOKS NA MANOK <span class="text-xs bg-flame-700/80 text-flame-100 font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider">POS & Inventory</span>
+            PATOKS NA MANOK <span class="text-xs bg-flame-700/80 text-flame-100 font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider">POS & Inventory v1.3.0</span>
           </h1>
           <p class="text-xs text-slate-400" id="manila-clock-display">Asia/Manila: Loading...</p>
         </div>
@@ -93,8 +93,8 @@
           <div class="w-16 h-16 bg-flame-100 text-flame-600 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl font-bold">
             🍗
           </div>
-          <h2 class="text-2xl font-black text-slate-900">System First Setup</h2>
-          <p class="text-xs text-slate-500 mt-1">Create master owner account and record starting chicken inventory.</p>
+          <h2 class="text-2xl font-black text-slate-900">System Setup</h2>
+          <p class="text-xs text-slate-500 mt-1">Create owner account and set initial general chicken stock.</p>
         </div>
 
         <form onsubmit="app.handleFirstSetup(event)" class="space-y-4">
@@ -106,15 +106,9 @@
             <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Owner Password</label>
             <input type="password" id="setup-password" required minlength="6" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-flame-500 focus:outline-none" placeholder="Minimum 6 characters">
           </div>
-          <div class="grid grid-cols-2 gap-4 pt-2">
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Opening Raw Chicken</label>
-              <input type="number" id="setup-raw" min="0" value="0" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-flame-500 focus:outline-none">
-            </div>
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Opening Prepared Chicken</label>
-              <input type="number" id="setup-prepared" min="0" value="0" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-flame-500 focus:outline-none">
-            </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Opening General Chicken Stock</label>
+            <input type="number" id="setup-stock" min="0" value="0" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-flame-500 focus:outline-none">
           </div>
 
           <button type="submit" class="w-full bg-flame-600 hover:bg-flame-700 text-white font-bold py-2.5 rounded-lg transition shadow-md shadow-flame-600/30 text-sm mt-4">
@@ -178,7 +172,7 @@
 
         <div class="flex items-center gap-2">
           <button onclick="app.runAcceptanceChecks()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-2 rounded-lg transition shadow-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-vial-circle-check"></i> Run 10 Acceptance Checks
+            <i class="fa-solid fa-vial-circle-check"></i> Run Acceptance Checks
           </button>
         </div>
       </div>
@@ -186,42 +180,15 @@
       <!-- TAB CONTENT: DASHBOARD -->
       <div id="tab-dashboard" class="tab-content space-y-6">
         
-        <!-- Current Stock Balances -->
-        <div>
-          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Live Stock Balances</h2>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            
-            <!-- Raw Remaining -->
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
-              <div class="absolute top-0 right-0 w-2 h-full bg-blue-500"></div>
-              <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Raw / Unprepared Stock</p>
-              <div class="flex items-baseline justify-between mt-2">
-                <span id="dash-raw-stock" class="text-4xl font-black text-slate-900">0</span>
-                <span class="text-xs font-semibold bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full">Chickens</span>
-              </div>
-            </div>
-
-            <!-- Prepared Remaining -->
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
-              <div class="absolute top-0 right-0 w-2 h-full bg-amber-500"></div>
-              <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Prepared / Marinated Stock</p>
-              <div class="flex items-baseline justify-between mt-2">
-                <span id="dash-prepared-stock" class="text-4xl font-black text-slate-900">0</span>
-                <span class="text-xs font-semibold bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full">Chickens</span>
-              </div>
-            </div>
-
-            <!-- Total Remaining -->
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
-              <div class="absolute top-0 right-0 w-2 h-full bg-emerald-500"></div>
-              <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Remaining Stock</p>
-              <div class="flex items-baseline justify-between mt-2">
-                <span id="dash-total-stock" class="text-4xl font-black text-slate-900">0</span>
-                <span class="text-xs font-semibold bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full">Chickens</span>
-              </div>
-            </div>
-
+        <!-- Live General Stock Balance -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-3 h-full bg-flame-600"></div>
+          <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">General Remaining Stocks (Automated)</p>
+          <div class="flex items-baseline justify-between mt-2">
+            <span id="dash-total-stock" class="text-5xl font-black text-slate-900">0</span>
+            <span class="text-sm font-bold bg-flame-50 text-flame-700 px-3 py-1 rounded-full border border-flame-200">Chickens Remaining</span>
           </div>
+          <p class="text-xs text-slate-400 mt-2">Calculated automatically: Total Orders - Total Sold - Disposed (Canteen) - Rejected/Spoiled.</p>
         </div>
 
         <!-- Today's Activity Cards -->
@@ -232,23 +199,23 @@
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-              <p class="text-xs text-slate-500 font-medium">Stock Received Today</p>
-              <p id="dash-today-received" class="text-2xl font-bold text-slate-900 mt-1">0</p>
-            </div>
-
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-              <p class="text-xs text-slate-500 font-medium">Prepared Today</p>
-              <p id="dash-today-prepared" class="text-2xl font-bold text-slate-900 mt-1">0</p>
+              <p class="text-xs text-slate-500 font-medium">Chicken Ordered Today</p>
+              <p id="dash-today-ordered" class="text-2xl font-bold text-blue-600 mt-1">0</p>
             </div>
 
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
               <p class="text-xs text-slate-500 font-medium">Chicken Sold Today</p>
-              <p id="dash-today-sold" class="text-2xl font-bold text-slate-900 mt-1">0</p>
+              <p id="dash-today-sold" class="text-2xl font-bold text-emerald-600 mt-1">0</p>
             </div>
 
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-              <p class="text-xs text-slate-500 font-medium">Chicken Disposed Today</p>
-              <p id="dash-today-disposed" class="text-2xl font-bold text-slate-900 mt-1">0</p>
+              <p class="text-xs text-slate-500 font-medium">Disposed (Canteen Reused)</p>
+              <p id="dash-today-disposed" class="text-2xl font-bold text-amber-600 mt-1">0</p>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+              <p class="text-xs text-slate-500 font-medium">Rejected / Spoiled</p>
+              <p id="dash-today-rejected" class="text-2xl font-bold text-red-600 mt-1">0</p>
             </div>
 
           </div>
@@ -261,22 +228,22 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-          <!-- 1. Supplier Delivery Form (Owner & Cashier) -->
+          <!-- 1. Order Form (Supplier) -->
           <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
             <div class="flex items-center justify-between border-b pb-3">
               <h3 class="font-bold text-slate-900 flex items-center gap-2">
-                <i class="fa-solid fa-truck text-blue-600"></i> Record Supplier Delivery
+                <i class="fa-solid fa-truck text-blue-600"></i> Order (Chicken from Supplier)
               </h3>
-              <span class="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded font-semibold">+ Adds to Raw</span>
+              <span class="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded font-semibold">+ Adds to Stock</span>
             </div>
-            <form onsubmit="app.handleTransaction(event, 'RECEIVE')" class="space-y-4">
+            <form onsubmit="app.handleTransaction(event, 'ORDER')" class="space-y-4">
               <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1">Target Date</label>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Date</label>
                 <input type="date" name="event_date" required class="input-date w-full px-3 py-2 border rounded-xl text-sm font-semibold">
               </div>
 
               <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1">Quantity Ordered / Received</label>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Number of Chicken Ordered</label>
                 <div class="flex items-center gap-2">
                   <button type="button" onclick="app.stepQty(this, -1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">-</button>
                   <input type="number" name="quantity" min="1" value="1" required class="w-full py-2 border rounded-xl text-center font-black text-xl text-slate-900 focus:ring-2 focus:ring-blue-500 focus:outline-none">
@@ -285,63 +252,28 @@
               </div>
 
               <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1">Supplier Name (Optional)</label>
-                <input type="text" name="notes" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. Bounty Fresh">
+                <label class="block text-xs font-bold text-slate-600 mb-1">Supplier Name / Notes (Optional)</label>
+                <input type="text" name="notes" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. Bounty Fresh batch #102">
               </div>
 
               <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-md shadow-blue-600/20 active:scale-98">
-                Save Delivery Entry
+                Record Supplier Order
               </button>
             </form>
           </div>
 
-          <!-- 2. Preparation Form (Owner & Cashier) -->
+          <!-- 2. Chicken Sold Form -->
           <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
             <div class="flex items-center justify-between border-b pb-3">
               <h3 class="font-bold text-slate-900 flex items-center gap-2">
-                <i class="fa-solid fa-fire text-amber-600"></i> Record Preparation / Marinating
+                <i class="fa-solid fa-drumstick-bite text-emerald-600"></i> Number of Chicken Sold
               </h3>
-              <span class="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded font-semibold">Raw ➔ Prepared</span>
+              <span class="text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded font-semibold">- Deducts Stock</span>
             </div>
-            <div class="text-xs text-slate-500">Available Raw Stock: <strong class="text-slate-800 quick-avail-raw">0</strong></div>
-            <form onsubmit="app.handleTransaction(event, 'PREPARE')" class="space-y-4">
-              <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1">Target Date</label>
-                <input type="date" name="event_date" required class="input-date w-full px-3 py-2 border rounded-xl text-sm font-semibold">
-              </div>
-
-              <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1">Quantity Prepared / Marinated</label>
-                <div class="flex items-center gap-2">
-                  <button type="button" onclick="app.stepQty(this, -1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">-</button>
-                  <input type="number" name="quantity" min="1" value="1" required class="w-full py-2 border rounded-xl text-center font-black text-xl text-slate-900 focus:ring-2 focus:ring-amber-500 focus:outline-none">
-                  <button type="button" onclick="app.stepQty(this, 1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">+</button>
-                </div>
-              </div>
-
-              <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1">Notes (Optional)</label>
-                <input type="text" name="notes" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. Batch #1 Special Marinate">
-              </div>
-
-              <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-md shadow-amber-600/20 active:scale-98">
-                Move Raw to Prepared
-              </button>
-            </form>
-          </div>
-
-          <!-- 3. Chicken Sold Form (Owner & Cashier) -->
-          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <div class="flex items-center justify-between border-b pb-3">
-              <h3 class="font-bold text-slate-900 flex items-center gap-2">
-                <i class="fa-solid fa-drumstick-bite text-flame-600"></i> Record Chicken Sold
-              </h3>
-              <span class="text-xs bg-flame-50 text-flame-700 px-2 py-0.5 rounded font-semibold">- Deducts Prepared</span>
-            </div>
-            <div class="text-xs text-slate-500">Available Prepared Stock: <strong class="text-slate-800 quick-avail-prepared">0</strong></div>
+            <div class="text-xs text-slate-500">Available Stocks: <strong class="text-slate-800 quick-avail-total">0</strong></div>
             <form onsubmit="app.handleTransaction(event, 'SELL')" class="space-y-4">
               <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1">Target Date</label>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Date</label>
                 <input type="date" name="event_date" required class="input-date w-full px-3 py-2 border rounded-xl text-sm font-semibold">
               </div>
 
@@ -349,7 +281,7 @@
                 <label class="block text-xs font-bold text-slate-600 mb-1">Quantity Sold</label>
                 <div class="flex items-center gap-2">
                   <button type="button" onclick="app.stepQty(this, -1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">-</button>
-                  <input type="number" name="quantity" min="1" value="1" required class="w-full py-2 border rounded-xl text-center font-black text-xl text-slate-900 focus:ring-2 focus:ring-flame-500 focus:outline-none">
+                  <input type="number" name="quantity" min="1" value="1" required class="w-full py-2 border rounded-xl text-center font-black text-xl text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                   <button type="button" onclick="app.stepQty(this, 1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">+</button>
                 </div>
               </div>
@@ -359,51 +291,78 @@
                 <input type="text" name="notes" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. Lunch shift sales">
               </div>
 
-              <button type="submit" class="w-full bg-flame-600 hover:bg-flame-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-md shadow-flame-600/20 active:scale-98">
+              <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-md shadow-emerald-600/20 active:scale-98">
                 Record Sale
               </button>
             </form>
           </div>
 
-          <!-- 4. Chicken Disposed Form (Owner & Cashier) -->
+          <!-- 3. Chicken Disposed (Canteen Reused) Form -->
           <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
             <div class="flex items-center justify-between border-b pb-3">
               <h3 class="font-bold text-slate-900 flex items-center gap-2">
-                <i class="fa-solid fa-trash-can text-red-600"></i> Record Disposal / Spoilage
+                <i class="fa-solid fa-utensils text-amber-600"></i> Disposed (Canteen Reused)
               </h3>
-              <span class="text-xs bg-red-50 text-red-700 px-2 py-0.5 rounded font-semibold">Stage Deduct</span>
+              <span class="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded font-semibold">- Deducts Stock (Variable ≥ 0)</span>
             </div>
+            <div class="text-xs text-slate-500">Available Stocks: <strong class="text-slate-800 quick-avail-total">0</strong></div>
             <form onsubmit="app.handleTransaction(event, 'DISPOSE')" class="space-y-4">
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-xs font-bold text-slate-600 mb-1">Target Date</label>
-                  <input type="date" name="event_date" required class="input-date w-full px-3 py-2 border rounded-xl text-sm font-semibold">
-                </div>
-                <div>
-                  <label class="block text-xs font-bold text-slate-600 mb-1">Stock Stage</label>
-                  <select name="stage" required class="w-full px-3 py-2 border rounded-xl text-sm bg-white font-medium">
-                    <option value="PREPARED">Prepared Stock</option>
-                    <option value="RAW">Raw Stock</option>
-                  </select>
-                </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Date</label>
+                <input type="date" name="event_date" required class="input-date w-full px-3 py-2 border rounded-xl text-sm font-semibold">
               </div>
 
               <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1">Quantity Disposed (≥ 0)</label>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Quantity Disposed for Canteen (Can be 0)</label>
                 <div class="flex items-center gap-2">
                   <button type="button" onclick="app.stepQty(this, -1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">-</button>
-                  <input type="number" name="quantity" min="0" value="0" required class="w-full py-2 border rounded-xl text-center font-black text-xl text-slate-900 focus:ring-2 focus:ring-red-500 focus:outline-none">
+                  <input type="number" name="quantity" min="0" value="0" required class="w-full py-2 border rounded-xl text-center font-black text-xl text-slate-900 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                   <button type="button" onclick="app.stepQty(this, 1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">+</button>
                 </div>
               </div>
 
               <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1">Reason / Notes (Optional)</label>
-                <input type="text" name="notes" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. Overcooked or damaged">
+                <label class="block text-xs font-bold text-slate-600 mb-1">Notes / Canteen Details (Optional)</label>
+                <input type="text" name="notes" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. Staff meal reuse">
               </div>
 
-              <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl text-sm transition shadow-md active:scale-98">
-                Record Disposal
+              <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-md shadow-amber-600/20 active:scale-98">
+                Record Canteen Disposal
+              </button>
+            </form>
+          </div>
+
+          <!-- 4. Chicken Rejected / Spoiled Form -->
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <div class="flex items-center justify-between border-b pb-3">
+              <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-triangle-exclamation text-red-600"></i> Rejected / Spoiled
+              </h3>
+              <span class="text-xs bg-red-50 text-red-700 px-2 py-0.5 rounded font-semibold">- Deducts Total Stock</span>
+            </div>
+            <div class="text-xs text-slate-500">Available Stocks: <strong class="text-slate-800 quick-avail-total">0</strong></div>
+            <form onsubmit="app.handleTransaction(event, 'REJECTED_SPOILED')" class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Date</label>
+                <input type="date" name="event_date" required class="input-date w-full px-3 py-2 border rounded-xl text-sm font-semibold">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Quantity Rejected / Spoiled</label>
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="app.stepQty(this, -1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">-</button>
+                  <input type="number" name="quantity" min="1" value="1" required class="w-full py-2 border rounded-xl text-center font-black text-xl text-slate-900 focus:ring-2 focus:ring-red-500 focus:outline-none">
+                  <button type="button" onclick="app.stepQty(this, 1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">+</button>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Reason for Rejection / Spoilage</label>
+                <input type="text" name="notes" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. Delivered expired, bad smell, damaged">
+              </div>
+
+              <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-md shadow-red-600/20 active:scale-98">
+                Record Rejected / Spoiled
               </button>
             </form>
           </div>
@@ -418,57 +377,57 @@
           <div class="flex flex-wrap items-center justify-between gap-4 border-b pb-4">
             <div>
               <h3 class="font-bold text-slate-900 text-lg">Daily Inventory Summary Report</h3>
-              <p class="text-xs text-slate-500">View exact opening balances, day activity totals, and closing balances for any date.</p>
+              <p class="text-xs text-slate-500">Track opening balances, daily movements (Orders, Sold, Disposed, Rejected), and closing stocks.</p>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex flex-wrap items-center gap-2">
               <label class="text-xs font-bold text-slate-600">Select Date:</label>
               <input type="date" id="summary-date-picker" onchange="app.renderDailySummary()" class="px-3 py-1.5 border rounded-lg text-sm font-semibold">
+              <button onclick="app.exportDailySummaryCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm flex items-center gap-1.5">
+                <i class="fa-solid fa-file-excel"></i> Export Daily CSV
+              </button>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+          <!-- Summary Sheet View -->
+          <div class="border rounded-2xl p-6 bg-slate-50/50 space-y-4">
+            <h4 class="font-bold text-sm text-slate-800 border-b pb-2 flex justify-between items-center">
+              <span>Daily Movement Breakdown</span>
+              <span id="sum-date-badge" class="text-xs bg-slate-200 text-slate-800 px-2.5 py-0.5 rounded-full font-semibold"></span>
+            </h4>
             
-            <!-- Raw Stage Report -->
-            <div class="border rounded-xl p-4 bg-slate-50/50 space-y-2">
-              <h4 class="font-bold text-sm text-slate-800 border-b pb-2 flex justify-between">
-                <span>Raw Chicken Stage</span>
-                <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Raw</span>
-              </h4>
-              <div class="text-xs space-y-1.5 text-slate-600">
-                <div class="flex justify-between"><span>Opening Raw Balance:</span> <strong id="sum-raw-open">0</strong></div>
-                <div class="flex justify-between text-emerald-700"><span>+ Received:</span> <strong><span id="sum-raw-recv">0</span></strong></div>
-                <div class="flex justify-between text-amber-700"><span>- Moved to Prepared:</span> <strong><span id="sum-raw-prep">0</span></strong></div>
-                <div class="flex justify-between text-red-700"><span>- Disposed Raw:</span> <strong><span id="sum-raw-disp">0</span></strong></div>
-                <div class="flex justify-between border-t pt-2 font-bold text-sm text-slate-900"><span>= Closing Raw Balance:</span> <span id="sum-raw-close">0</span></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              <div class="flex justify-between p-3 bg-white rounded-xl border">
+                <span class="font-medium text-slate-600">Opening Balance:</span>
+                <strong id="sum-opening-bal" class="text-sm text-slate-900">0</strong>
+              </div>
+              <div class="flex justify-between p-3 bg-white rounded-xl border">
+                <span class="font-medium text-blue-700">+ Supplier Orders:</span>
+                <strong id="sum-ordered-qty" class="text-sm text-blue-700">0</strong>
+              </div>
+              <div class="flex justify-between p-3 bg-white rounded-xl border">
+                <span class="font-medium text-emerald-700">- Chicken Sold:</span>
+                <strong id="sum-sold-qty" class="text-sm text-emerald-700">0</strong>
+              </div>
+              <div class="flex justify-between p-3 bg-white rounded-xl border">
+                <span class="font-medium text-amber-700">- Disposed (Canteen Reused):</span>
+                <strong id="sum-disposed-qty" class="text-sm text-amber-700">0</strong>
+              </div>
+              <div class="flex justify-between p-3 bg-white rounded-xl border col-span-1 md:col-span-2">
+                <span class="font-medium text-red-700">- Rejected / Spoiled:</span>
+                <strong id="sum-rejected-qty" class="text-sm text-red-700">0</strong>
               </div>
             </div>
 
-            <!-- Prepared Stage Report -->
-            <div class="border rounded-xl p-4 bg-slate-50/50 space-y-2">
-              <h4 class="font-bold text-sm text-slate-800 border-b pb-2 flex justify-between">
-                <span>Prepared Chicken Stage</span>
-                <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded">Prepared</span>
-              </h4>
-              <div class="text-xs space-y-1.5 text-slate-600">
-                <div class="flex justify-between"><span>Opening Prepared Balance:</span> <strong id="sum-prep-open">0</strong></div>
-                <div class="flex justify-between text-amber-700"><span>+ Received from Raw:</span> <strong><span id="sum-prep-from-raw">0</span></strong></div>
-                <div class="flex justify-between text-flame-700"><span>- Sold:</span> <strong><span id="sum-prep-sold">0</span></strong></div>
-                <div class="flex justify-between text-red-700"><span>- Disposed Prepared:</span> <strong><span id="sum-prep-disp">0</span></strong></div>
-                <div class="flex justify-between border-t pt-2 font-bold text-sm text-slate-900"><span>= Closing Prepared Balance:</span> <span id="sum-prep-close">0</span></div>
+            <!-- Total Closing Stock -->
+            <div class="bg-slate-900 text-white rounded-xl p-5 flex justify-between items-center mt-4">
+              <div>
+                <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Closing General Stock Balance</p>
+                <p class="text-xs text-slate-300 mt-0.5">Opening + Ordered - Sold - Disposed - Rejected/Spoiled</p>
               </div>
-            </div>
-
-          </div>
-
-          <!-- Total Balance Banner -->
-          <div class="bg-slate-900 text-white rounded-xl p-4 flex justify-between items-center mt-4">
-            <div>
-              <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Overall Combined Day Totals</p>
-              <p class="text-sm font-medium mt-0.5">Closing Total Stock = Raw (<span id="sum-tot-raw">0</span>) + Prepared (<span id="sum-tot-prep">0</span>)</p>
-            </div>
-            <div class="text-right">
-              <span id="sum-tot-close" class="text-3xl font-black text-flame-500">0</span>
-              <span class="text-xs text-slate-400 block">Chickens</span>
+              <div class="text-right">
+                <span id="sum-closing-bal" class="text-4xl font-black text-flame-500">0</span>
+                <span class="text-xs text-slate-400 block">Chickens</span>
+              </div>
             </div>
           </div>
 
@@ -481,12 +440,15 @@
           <div class="flex flex-wrap items-center justify-between gap-4 border-b pb-4">
             <div>
               <h3 class="font-bold text-slate-900 text-lg">Immutable Stock Transaction Ledger</h3>
-              <p class="text-xs text-slate-500">Complete historical record of deliveries, preparation, sales, and disposal.</p>
+              <p class="text-xs text-slate-500">Complete historical record. Owners can revise specific logged entries or reverse transactions.</p>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex flex-wrap items-center gap-2">
               <label class="text-xs font-bold text-slate-600">Filter Date:</label>
               <input type="date" id="ledger-filter-date" onchange="app.renderLedgerTable()" class="px-3 py-1.5 border rounded-lg text-sm">
-              <button onclick="document.getElementById('ledger-filter-date').value=''; app.renderLedgerTable()" class="text-xs text-slate-500 hover:text-slate-800 underline">Clear</button>
+              <button onclick="document.getElementById('ledger-filter-date').value=''; app.renderLedgerTable()" class="text-xs text-slate-500 hover:text-slate-800 underline mr-2">Clear</button>
+              <button onclick="app.exportLedgerCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm flex items-center gap-1.5">
+                <i class="fa-solid fa-file-csv"></i> Export CSV / Excel
+              </button>
             </div>
           </div>
 
@@ -497,16 +459,15 @@
                   <th class="p-3">ID / Time</th>
                   <th class="p-3">Event Date</th>
                   <th class="p-3">Type</th>
-                  <th class="p-3">Stage</th>
                   <th class="p-3 text-right">Qty</th>
-                  <th class="p-3">User</th>
+                  <th class="p-3">Recorded By</th>
                   <th class="p-3">Notes</th>
                   <th class="p-3">Status</th>
-                  <th class="p-3 text-center owner-only">Action (Owner Only)</th>
+                  <th class="p-3 text-center owner-only">Owner Actions (Revise Data)</th>
                 </tr>
               </thead>
               <tbody id="ledger-tbody" class="divide-y divide-slate-100">
-                <!-- Ledger rows populated dynamically -->
+                <!-- Ledger rows -->
               </tbody>
             </table>
           </div>
@@ -561,6 +522,68 @@
 
       </div>
 
+      <!-- EDIT SPECIFIC LEDGER DATA MODAL (OWNER ONLY) -->
+      <div id="modal-edit-ledger" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-slate-200 overflow-hidden">
+          <div class="p-4 bg-slate-900 text-white flex justify-between items-center">
+            <h3 class="font-bold text-sm flex items-center gap-2">
+              <i class="fa-solid fa-pen-to-square text-amber-400"></i> Owner Data Revision Control
+            </h3>
+            <button onclick="app.closeEditModal()" class="text-slate-400 hover:text-white">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <form onsubmit="app.submitLedgerRevision(event)" class="p-6 space-y-4">
+            <input type="hidden" id="edit-tx-id">
+            
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Transaction ID</label>
+              <input type="text" id="edit-tx-id-display" disabled class="w-full px-3 py-1.5 border rounded bg-slate-100 text-xs font-mono">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Event Date</label>
+                <input type="date" id="edit-event-date" required class="w-full px-3 py-2 border rounded-lg text-xs font-semibold">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Type</label>
+                <select id="edit-type" required class="w-full px-3 py-2 border rounded-lg text-xs font-semibold bg-white">
+                  <option value="ORDER">ORDER (Supplier)</option>
+                  <option value="SELL">SELL</option>
+                  <option value="DISPOSE">DISPOSE (Canteen)</option>
+                  <option value="REJECTED_SPOILED">REJECTED / SPOILED</option>
+                  <option value="OPENING">OPENING STOCK</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Quantity</label>
+              <input type="number" id="edit-quantity" min="0" required class="w-full px-3 py-2 border rounded-lg text-sm font-bold">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Notes / Reason</label>
+              <input type="text" id="edit-notes" class="w-full px-3 py-2 border rounded-lg text-xs" placeholder="e.g. Corrected cashier typing mistake">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Revision Reason (Required for Audit)</label>
+              <input type="text" id="edit-revision-reason" required class="w-full px-3 py-2 border rounded-lg text-xs border-amber-300 bg-amber-50" placeholder="Why are you changing this entry?">
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2">
+              <button type="button" onclick="app.closeEditModal()" class="px-4 py-2 text-xs font-bold text-slate-600 hover:text-slate-800">Cancel</button>
+              <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow">
+                Save Specific Data Revision
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
       <!-- ACCEPTANCE TEST MODAL RESULTS -->
       <div id="modal-test-results" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden border border-slate-200">
@@ -589,7 +612,7 @@
 
   <!-- Footer -->
   <footer class="bg-white border-t py-4 text-center text-xs text-slate-400 mt-auto">
-    Patoks Na Manok POS & Inventory System &bull; Multi-Device Server Sync Edition
+    Patoks Na Manok POS & Inventory System &bull; Multi-Device Server Sync Edition v1.3.0
   </footer>
 
   <!-- SYSTEM JAVASCRIPT LOGIC -->
@@ -754,8 +777,7 @@
         e.preventDefault();
         const username = document.getElementById('setup-username').value.trim();
         const password = document.getElementById('setup-password').value;
-        const rawQty = parseInt(document.getElementById('setup-raw').value) || 0;
-        const prepQty = parseInt(document.getElementById('setup-prepared').value) || 0;
+        const stockQty = parseInt(document.getElementById('setup-stock').value) || 0;
 
         const hashedPassword = await this.hashPassword(password);
         
@@ -766,29 +788,15 @@
         };
 
         const manilaToday = this.getManilaDate();
-        if (rawQty > 0) {
+        if (stockQty > 0) {
           this.db.ledger.push({
             id: 'TX-' + Date.now() + '-1',
-            type: 'OPENING_RAW',
-            quantity: rawQty,
-            stage: 'RAW',
+            type: 'OPENING',
+            quantity: stockQty,
             event_date: manilaToday,
             created_at: this.getManilaTimestamp(),
             created_by: username,
-            notes: 'Initial Setup Opening Raw Stock',
-            reversed: false
-          });
-        }
-        if (prepQty > 0) {
-          this.db.ledger.push({
-            id: 'TX-' + Date.now() + '-2',
-            type: 'OPENING_PREPARED',
-            quantity: prepQty,
-            stage: 'PREPARED',
-            event_date: manilaToday,
-            created_at: this.getManilaTimestamp(),
-            created_by: username,
-            notes: 'Initial Setup Opening Prepared Stock',
+            notes: 'Initial Setup Opening Chicken Stock',
             reversed: false
           });
         }
@@ -864,43 +872,32 @@
       }
 
       calculateBalances(upToDate = null) {
-        let rawRemaining = 0;
-        let preparedRemaining = 0;
+        let totalRemaining = 0;
 
         for (const tx of (this.db.ledger || [])) {
           if (tx.reversed) continue;
           if (upToDate && tx.event_date > upToDate) continue;
 
+          const qty = Number(tx.quantity) || 0;
           switch (tx.type) {
+            case 'OPENING':
             case 'OPENING_RAW':
-            case 'RECEIVE':
-              rawRemaining += tx.quantity;
-              break;
-
             case 'OPENING_PREPARED':
-              preparedRemaining += tx.quantity;
-              break;
-
-            case 'PREPARE':
-              rawRemaining -= tx.quantity;
-              preparedRemaining += tx.quantity;
+            case 'ORDER':
+            case 'RECEIVE':
+              totalRemaining += qty;
               break;
 
             case 'SELL':
-              preparedRemaining -= tx.quantity;
-              break;
-
             case 'DISPOSE':
-              if (tx.stage === 'RAW') rawRemaining -= tx.quantity;
-              if (tx.stage === 'PREPARED') preparedRemaining -= tx.quantity;
+            case 'REJECTED_SPOILED':
+              totalRemaining -= qty;
               break;
           }
         }
 
         return {
-          rawRemaining: Math.max(0, rawRemaining),
-          preparedRemaining: Math.max(0, preparedRemaining),
-          totalRemaining: Math.max(0, rawRemaining + preparedRemaining)
+          totalRemaining: Math.max(0, totalRemaining)
         };
       }
 
@@ -911,7 +908,6 @@
 
         const event_date = formData.get('event_date');
         const quantity = parseInt(formData.get('quantity')) || 0;
-        const stage = formData.get('stage') || (type === 'RECEIVE' ? 'RAW' : 'PREPARED');
         const notes = formData.get('notes') || '';
 
         if (!event_date) {
@@ -929,28 +925,14 @@
         await this.loadDatabase();
         const currentBal = this.calculateBalances();
 
-        if (type === 'PREPARE' && quantity > currentBal.rawRemaining) {
-          return this.showAlert('danger', 'Transaction Rejected', `Cannot prepare ${quantity} chickens. Only ${currentBal.rawRemaining} raw chickens available.`);
-        }
-
-        if (type === 'SELL' && quantity > currentBal.preparedRemaining) {
-          return this.showAlert('danger', 'Transaction Rejected', `Cannot sell ${quantity} chickens. Only ${currentBal.preparedRemaining} prepared chickens available.`);
-        }
-
-        if (type === 'DISPOSE') {
-          if (stage === 'RAW' && quantity > currentBal.rawRemaining) {
-            return this.showAlert('danger', 'Transaction Rejected', `Cannot dispose ${quantity} raw chickens. Only ${currentBal.rawRemaining} raw available.`);
-          }
-          if (stage === 'PREPARED' && quantity > currentBal.preparedRemaining) {
-            return this.showAlert('danger', 'Transaction Rejected', `Cannot dispose ${quantity} prepared chickens. Only ${currentBal.preparedRemaining} prepared available.`);
-          }
+        if (['SELL', 'DISPOSE', 'REJECTED_SPOILED'].includes(type) && quantity > currentBal.totalRemaining) {
+          return this.showAlert('danger', 'Transaction Rejected', `Cannot deduct ${quantity} chickens. Only ${currentBal.totalRemaining} chickens in remaining general stock.`);
         }
 
         const newTx = {
           id: 'TX-' + Date.now(),
           type,
           quantity,
-          stage,
           event_date,
           created_at: this.getManilaTimestamp(),
           created_by: this.currentUser ? this.currentUser.username : 'Unknown',
@@ -973,7 +955,7 @@
           return this.showAlert('danger', 'Access Denied', 'Only Owners can revise or reverse backend transactions.');
         }
 
-        const reason = prompt('Enter reason for transaction revision / reversal:');
+        const reason = prompt('Enter reason for transaction reversal:');
         if (!reason) return;
 
         await this.loadDatabase();
@@ -986,6 +968,65 @@
 
           await this.saveDatabase();
           this.showAlert('success', 'Revision Saved', `Transaction ${txId} has been reversed by Owner.`);
+        }
+      }
+
+      openEditModal(txId) {
+        if (!this.currentUser || this.currentUser.role !== 'OWNER') {
+          return this.showAlert('danger', 'Access Denied', 'Only Owners can revise logged data.');
+        }
+
+        const tx = (this.db.ledger || []).find(t => t.id === txId);
+        if (!tx) return;
+
+        document.getElementById('edit-tx-id').value = tx.id;
+        document.getElementById('edit-tx-id-display').value = tx.id;
+        document.getElementById('edit-event-date').value = tx.event_date;
+        document.getElementById('edit-type').value = ['ORDER', 'SELL', 'DISPOSE', 'REJECTED_SPOILED', 'OPENING'].includes(tx.type) ? tx.type : 'ORDER';
+        document.getElementById('edit-quantity').value = tx.quantity;
+        document.getElementById('edit-notes').value = tx.notes || '';
+        document.getElementById('edit-revision-reason').value = '';
+
+        document.getElementById('modal-edit-ledger').classList.remove('hidden');
+      }
+
+      closeEditModal() {
+        document.getElementById('modal-edit-ledger').classList.add('hidden');
+      }
+
+      async submitLedgerRevision(e) {
+        e.preventDefault();
+        if (!this.currentUser || this.currentUser.role !== 'OWNER') {
+          return this.showAlert('danger', 'Access Denied', 'Owner permission required.');
+        }
+
+        const txId = document.getElementById('edit-tx-id').value;
+        const newDate = document.getElementById('edit-event-date').value;
+        const newType = document.getElementById('edit-type').value;
+        const newQty = parseInt(document.getElementById('edit-quantity').value) || 0;
+        const newNotes = document.getElementById('edit-notes').value.trim();
+        const revisionReason = document.getElementById('edit-revision-reason').value.trim();
+
+        if (!revisionReason) {
+          return alert('Revision reason is required for audit history.');
+        }
+
+        await this.loadDatabase();
+        const tx = (this.db.ledger || []).find(t => t.id === txId);
+
+        if (tx) {
+          const oldSnapshot = `(Was: Date=${tx.event_date}, Type=${tx.type}, Qty=${tx.quantity}, Notes=${tx.notes || ''})`;
+          
+          tx.event_date = newDate;
+          tx.type = newType;
+          tx.quantity = newQty;
+          tx.notes = newNotes ? `${newNotes} [Owner Edit: ${revisionReason} | ${oldSnapshot}]` : `[Owner Edit: ${revisionReason} | ${oldSnapshot}]`;
+          tx.last_edited_by = this.currentUser.username;
+          tx.last_edited_at = this.getManilaTimestamp();
+
+          await this.saveDatabase();
+          this.closeEditModal();
+          this.showAlert('success', 'Data Revised', `Transaction ${txId} data updated successfully by Owner.`);
         }
       }
 
@@ -1011,16 +1052,10 @@
         const bal = this.calculateBalances();
         const manilaToday = this.getManilaDate();
 
-        const rawEl = document.getElementById('dash-raw-stock');
-        const prepEl = document.getElementById('dash-prepared-stock');
         const totEl = document.getElementById('dash-total-stock');
-
-        if (rawEl) rawEl.innerText = bal.rawRemaining;
-        if (prepEl) prepEl.innerText = bal.preparedRemaining;
         if (totEl) totEl.innerText = bal.totalRemaining;
 
-        document.querySelectorAll('.quick-avail-raw').forEach(el => el.innerText = bal.rawRemaining);
-        document.querySelectorAll('.quick-avail-prepared').forEach(el => el.innerText = bal.preparedRemaining);
+        document.querySelectorAll('.quick-avail-total').forEach(el => el.innerText = bal.totalRemaining);
 
         document.querySelectorAll('.input-date').forEach(el => {
           if (!el.value) el.value = manilaToday;
@@ -1029,24 +1064,24 @@
         const dateLabel = document.getElementById('dash-date-label');
         if (dateLabel) dateLabel.innerText = manilaToday;
 
-        let recvToday = 0, prepToday = 0, soldToday = 0, dispToday = 0;
+        let orderedToday = 0, soldToday = 0, dispToday = 0, rejectedToday = 0;
         (this.db.ledger || []).forEach(tx => {
           if (tx.reversed || tx.event_date !== manilaToday) return;
-          if (tx.type === 'RECEIVE') recvToday += tx.quantity;
-          if (tx.type === 'PREPARE') prepToday += tx.quantity;
+          if (tx.type === 'ORDER' || tx.type === 'RECEIVE') orderedToday += tx.quantity;
           if (tx.type === 'SELL') soldToday += tx.quantity;
           if (tx.type === 'DISPOSE') dispToday += tx.quantity;
+          if (tx.type === 'REJECTED_SPOILED') rejectedToday += tx.quantity;
         });
 
-        const recvEl = document.getElementById('dash-today-received');
-        const prepTodayEl = document.getElementById('dash-today-prepared');
+        const ordEl = document.getElementById('dash-today-ordered');
         const soldEl = document.getElementById('dash-today-sold');
         const dispEl = document.getElementById('dash-today-disposed');
+        const rejEl = document.getElementById('dash-today-rejected');
 
-        if (recvEl) recvEl.innerText = recvToday;
-        if (prepTodayEl) prepTodayEl.innerText = prepToday;
+        if (ordEl) ordEl.innerText = orderedToday;
         if (soldEl) soldEl.innerText = soldToday;
         if (dispEl) dispEl.innerText = dispToday;
+        if (rejEl) rejEl.innerText = rejectedToday;
 
         this.renderDailySummary();
         this.renderLedgerTable();
@@ -1059,58 +1094,158 @@
         if (!datePicker.value) datePicker.value = this.getManilaDate();
         const selDate = datePicker.value;
 
-        let rawOpen = 0, prepOpen = 0;
-        let rawRecv = 0, rawPrep = 0, rawDisp = 0;
-        let prepSold = 0, prepDisp = 0;
+        const dateBadge = document.getElementById('sum-date-badge');
+        if (dateBadge) dateBadge.innerText = selDate;
+
+        let openBal = 0;
+        let ordered = 0, sold = 0, disposed = 0, rejected = 0;
 
         (this.db.ledger || []).forEach(tx => {
           if (tx.reversed) return;
 
+          const qty = Number(tx.quantity) || 0;
           if (tx.event_date < selDate) {
-            if (tx.type === 'OPENING_RAW' || tx.type === 'RECEIVE') rawOpen += tx.quantity;
-            if (tx.type === 'OPENING_PREPARED') prepOpen += tx.quantity;
-            if (tx.type === 'PREPARE') { rawOpen -= tx.quantity; prepOpen += tx.quantity; }
-            if (tx.type === 'SELL') prepOpen -= tx.quantity;
-            if (tx.type === 'DISPOSE') {
-              if (tx.stage === 'RAW') rawOpen -= tx.quantity;
-              if (tx.stage === 'PREPARED') prepOpen -= tx.quantity;
+            if (['OPENING', 'OPENING_RAW', 'OPENING_PREPARED', 'ORDER', 'RECEIVE'].includes(tx.type)) {
+              openBal += qty;
+            } else if (['SELL', 'DISPOSE', 'REJECTED_SPOILED'].includes(tx.type)) {
+              openBal -= qty;
             }
           } else if (tx.event_date === selDate) {
-            if (tx.type === 'OPENING_RAW') rawOpen += tx.quantity;
-            if (tx.type === 'OPENING_PREPARED') prepOpen += tx.quantity;
-            if (tx.type === 'RECEIVE') rawRecv += tx.quantity;
-            if (tx.type === 'PREPARE') rawPrep += tx.quantity;
-            if (tx.type === 'SELL') prepSold += tx.quantity;
-            if (tx.type === 'DISPOSE') {
-              if (tx.stage === 'RAW') rawDisp += tx.quantity;
-              if (tx.stage === 'PREPARED') prepDisp += tx.quantity;
-            }
+            if (tx.type === 'OPENING' || tx.type === 'OPENING_RAW' || tx.type === 'OPENING_PREPARED') openBal += qty;
+            if (tx.type === 'ORDER' || tx.type === 'RECEIVE') ordered += qty;
+            if (tx.type === 'SELL') sold += qty;
+            if (tx.type === 'DISPOSE') disposed += qty;
+            if (tx.type === 'REJECTED_SPOILED') rejected += qty;
           }
         });
 
-        const rawClose = Math.max(0, rawOpen + rawRecv - rawPrep - rawDisp);
-        const prepClose = Math.max(0, prepOpen + rawPrep - prepSold - prepDisp);
+        const closingBal = Math.max(0, openBal + ordered - sold - disposed - rejected);
 
-        const elemIds = {
-          'sum-raw-open': rawOpen,
-          'sum-raw-recv': rawRecv,
-          'sum-raw-prep': rawPrep,
-          'sum-raw-disp': rawDisp,
-          'sum-raw-close': rawClose,
-          'sum-prep-open': prepOpen,
-          'sum-prep-from-raw': rawPrep,
-          'sum-prep-sold': prepSold,
-          'sum-prep-disp': prepDisp,
-          'sum-prep-close': prepClose,
-          'sum-tot-raw': rawClose,
-          'sum-tot-prep': prepClose,
-          'sum-tot-close': rawClose + prepClose
+        const setVal = (id, val) => {
+          const el = document.getElementById(id);
+          if (el) el.innerText = val;
         };
 
-        for (let id in elemIds) {
-          const el = document.getElementById(id);
-          if (el) el.innerText = elemIds[id];
+        setVal('sum-opening-bal', openBal);
+        setVal('sum-ordered-qty', ordered);
+        setVal('sum-sold-qty', sold);
+        setVal('sum-disposed-qty', disposed);
+        setVal('sum-rejected-qty', rejected);
+        setVal('sum-closing-bal', closingBal);
+      }
+
+      exportDailySummaryCSV() {
+        const selDate = document.getElementById('summary-date-picker')?.value || this.getManilaDate();
+        
+        let openBal = 0;
+        let ordered = 0, sold = 0, disposed = 0, rejected = 0;
+
+        const dayEntries = [];
+
+        (this.db.ledger || []).forEach(tx => {
+          if (tx.reversed) return;
+
+          const qty = Number(tx.quantity) || 0;
+          if (tx.event_date < selDate) {
+            if (['OPENING', 'OPENING_RAW', 'OPENING_PREPARED', 'ORDER', 'RECEIVE'].includes(tx.type)) {
+              openBal += qty;
+            } else if (['SELL', 'DISPOSE', 'REJECTED_SPOILED'].includes(tx.type)) {
+              openBal -= qty;
+            }
+          } else if (tx.event_date === selDate) {
+            dayEntries.push(tx);
+            if (tx.type === 'OPENING' || tx.type === 'OPENING_RAW' || tx.type === 'OPENING_PREPARED') openBal += qty;
+            if (tx.type === 'ORDER' || tx.type === 'RECEIVE') ordered += qty;
+            if (tx.type === 'SELL') sold += qty;
+            if (tx.type === 'DISPOSE') disposed += qty;
+            if (tx.type === 'REJECTED_SPOILED') rejected += qty;
+          }
+        });
+
+        const closingBal = Math.max(0, openBal + ordered - sold - disposed - rejected);
+
+        const lines = [];
+        lines.push(`"PATOKS NA MANOK - DAILY INVENTORY SUMMARY REPORT"`);
+        lines.push(`"Report Date:","${selDate}"`);
+        lines.push(`"Generated At:","${this.getManilaTimestamp()}"`);
+        lines.push(``);
+        lines.push(`"Metric / Variable","Quantity (Chickens)"`);
+        lines.push(`"Opening Balance",${openBal}`);
+        lines.push(`"+ Order (Supplier Delivered)",${ordered}`);
+        lines.push(`"- Number of Chicken Sold",-${sold}`);
+        lines.push(`"- Disposed (Canteen Reused)",-${disposed}`);
+        lines.push(`"- Rejected / Spoiled",-${rejected}`);
+        lines.push(`"= General Remaining Stocks",${closingBal}`);
+        lines.push(``);
+        lines.push(`"DAILY TRANSACTIONS LOG (${selDate})"`);
+        lines.push(`"Transaction ID","Type","Quantity","Recorded By","Created At","Notes"`);
+
+        if (dayEntries.length === 0) {
+          lines.push(`"No transactions recorded for this date.",,,,,`);
+        } else {
+          dayEntries.forEach(tx => {
+            lines.push(`"${tx.id}","${tx.type}",${tx.quantity},"${tx.created_by}","${tx.created_at}","${(tx.notes || '').replace(/"/g, '""')}"`);
+          });
         }
+
+        const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + lines.join('\n');
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', `Patoks_Manok_Daily_Summary_${selDate}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        this.showAlert('success', 'Daily Report Downloaded', `Daily Summary for ${selDate} exported to CSV.`);
+      }
+
+      exportLedgerCSV() {
+        if (!this.db || !this.db.ledger || this.db.ledger.length === 0) {
+          return this.showAlert('danger', 'Export Error', 'No ledger entries to export.');
+        }
+
+        const filterDate = document.getElementById('ledger-filter-date')?.value;
+        let rows = [...this.db.ledger];
+
+        if (filterDate) {
+          rows = rows.filter(r => r.event_date === filterDate);
+        }
+
+        if (rows.length === 0) {
+          return this.showAlert('danger', 'Export Error', `No entries found for date ${filterDate}.`);
+        }
+
+        const lines = [];
+        lines.push(`"PATOKS NA MANOK - STOCK LEDGER EXPORT"`);
+        lines.push(`"Filter Date:","${filterDate || 'ALL DATES'}"`);
+        lines.push(`"Export Timestamp:","${this.getManilaTimestamp()}"`);
+        lines.push(``);
+        lines.push(`"Transaction ID","Event Date","Type","Quantity","Recorded By","Recorded At","Notes","Status"`);
+
+        rows.forEach(tx => {
+          lines.push([
+            `"${tx.id}"`,
+            `"${tx.event_date}"`,
+            `"${tx.type}"`,
+            tx.quantity,
+            `"${tx.created_by}"`,
+            `"${tx.created_at}"`,
+            `"${(tx.notes || '').replace(/"/g, '""')}"`,
+            `"${tx.reversed ? 'REVERSED' : 'ACTIVE'}"`
+          ].join(','));
+        });
+
+        const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + lines.join('\n');
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', filterDate ? `Patoks_Manok_Ledger_${filterDate}.csv` : `Patoks_Manok_Ledger_All_${this.getManilaDate()}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        this.showAlert('success', 'Ledger Exported', 'Stock ledger exported as CSV for Sheets/Excel.');
       }
 
       renderLedgerTable() {
@@ -1128,7 +1263,7 @@
         rows.reverse();
 
         if (rows.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="9" class="p-4 text-center text-slate-400">No transaction records found.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-400">No transaction records found.</td></tr>`;
           return;
         }
 
@@ -1140,13 +1275,12 @@
               <td class="p-3 font-semibold text-slate-800">${tx.event_date}</td>
               <td class="p-3">
                 <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
-                  tx.type === 'RECEIVE' ? 'bg-blue-100 text-blue-800' :
-                  tx.type === 'PREPARE' ? 'bg-amber-100 text-amber-800' :
-                  tx.type === 'SELL' ? 'bg-flame-100 text-flame-800' :
-                  tx.type === 'DISPOSE' ? 'bg-red-100 text-red-800' : 'bg-slate-100 text-slate-800'
+                  tx.type === 'ORDER' || tx.type === 'RECEIVE' ? 'bg-blue-100 text-blue-800' :
+                  tx.type === 'SELL' ? 'bg-emerald-100 text-emerald-800' :
+                  tx.type === 'DISPOSE' ? 'bg-amber-100 text-amber-800' :
+                  tx.type === 'REJECTED_SPOILED' ? 'bg-red-100 text-red-800' : 'bg-slate-100 text-slate-800'
                 }">${tx.type}</span>
               </td>
-              <td class="p-3 font-semibold">${tx.stage || '-'}</td>
               <td class="p-3 text-right font-black text-sm text-slate-900">${tx.quantity}</td>
               <td class="p-3 font-medium text-slate-700">${tx.created_by}</td>
               <td class="p-3 text-slate-500">${tx.notes || '-'} ${isRev ? `<br><span class="text-red-600 no-underline text-[10px] font-bold">Reversed by ${tx.reversed_by}: ${tx.reversal_reason}</span>` : ''}</td>
@@ -1154,7 +1288,12 @@
                 ${isRev ? '<span class="text-red-600 font-bold">REVERSED</span>' : '<span class="text-emerald-600 font-bold">ACTIVE</span>'}
               </td>
               <td class="p-3 text-center ${isOwner ? '' : 'hidden'}">
-                ${!isRev ? `<button onclick="app.reverseTransaction('${tx.id}')" class="text-red-600 hover:text-red-800 font-bold underline text-[11px]">Revise / Reverse</button>` : '-'}
+                ${!isRev ? `
+                  <div class="flex items-center justify-center gap-2">
+                    <button onclick="app.openEditModal('${tx.id}')" class="text-amber-600 hover:text-amber-800 font-bold underline text-[11px]"><i class="fa-solid fa-pen"></i> Edit Data</button>
+                    <button onclick="app.reverseTransaction('${tx.id}')" class="text-red-600 hover:text-red-800 font-bold underline text-[11px]"><i class="fa-solid fa-ban"></i> Reverse</button>
+                  </div>
+                ` : '-'}
               </td>
             </tr>
           `;
@@ -1226,77 +1365,67 @@
           const testToday = this.getManilaDate();
           this.db.ledger = [];
           
-          this.db.ledger.push({ id:'T1', type:'RECEIVE', quantity:20, stage:'RAW', event_date:testToday, created_by:'test', reversed:false });
+          // 1. Order 50
+          this.db.ledger.push({ id:'T1', type:'ORDER', quantity:50, event_date:testToday, created_by:'test', reversed:false });
           let b1 = this.calculateBalances();
           results.push({
-            step: "1. Receive 20 Stock",
-            pass: b1.rawRemaining === 20 && b1.preparedRemaining === 0 && b1.totalRemaining === 20,
-            details: `Raw: ${b1.rawRemaining} (Exp: 20), Prep: ${b1.preparedRemaining} (Exp: 0), Total: ${b1.totalRemaining} (Exp: 20)`
+            step: "1. Record Supplier Order (50 Chickens)",
+            pass: b1.totalRemaining === 50,
+            details: `Total Stock: ${b1.totalRemaining} (Exp: 50)`
           });
 
-          this.db.ledger.push({ id:'T2', type:'PREPARE', quantity:8, stage:'PREPARED', event_date:testToday, created_by:'test', reversed:false });
+          // 2. Sell 10
+          this.db.ledger.push({ id:'T2', type:'SELL', quantity:10, event_date:testToday, created_by:'test', reversed:false });
           let b2 = this.calculateBalances();
           results.push({
-            step: "2. Prepare 8 Chickens",
-            pass: b2.rawRemaining === 12 && b2.preparedRemaining === 8 && b2.totalRemaining === 20,
-            details: `Raw: ${b2.rawRemaining} (Exp: 12), Prep: ${b2.preparedRemaining} (Exp: 8), Total: ${b2.totalRemaining} (Exp: 20)`
+            step: "2. Record Chicken Sold (10 Chickens)",
+            pass: b2.totalRemaining === 40,
+            details: `Total Stock: ${b2.totalRemaining} (Exp: 40)`
           });
 
-          this.db.ledger.push({ id:'T3', type:'SELL', quantity:3, stage:'PREPARED', event_date:testToday, created_by:'test', reversed:false });
+          // 3. Disposed 5 (Canteen Reused)
+          this.db.ledger.push({ id:'T3', type:'DISPOSE', quantity:5, event_date:testToday, created_by:'test', reversed:false });
           let b3 = this.calculateBalances();
           results.push({
-            step: "3. Sell 3 Chickens",
-            pass: b3.rawRemaining === 12 && b3.preparedRemaining === 5 && b3.totalRemaining === 17,
-            details: `Raw: ${b3.rawRemaining} (Exp: 12), Prep: ${b3.preparedRemaining} (Exp: 5), Total: ${b3.totalRemaining} (Exp: 17)`
+            step: "3. Record Disposed - Canteen Reused (5 Chickens)",
+            pass: b3.totalRemaining === 35,
+            details: `Total Stock: ${b3.totalRemaining} (Exp: 35)`
           });
 
-          this.db.ledger.push({ id:'T4', type:'DISPOSE', quantity:1, stage:'PREPARED', event_date:testToday, created_by:'test', reversed:false });
+          // 4. Disposed 0 (Variable = 0)
+          this.db.ledger.push({ id:'T4', type:'DISPOSE', quantity:0, event_date:testToday, created_by:'test', reversed:false });
           let b4 = this.calculateBalances();
           results.push({
-            step: "4. Dispose 1 Prepared",
-            pass: b4.rawRemaining === 12 && b4.preparedRemaining === 4 && b4.totalRemaining === 16,
-            details: `Raw: ${b4.rawRemaining} (Exp: 12), Prep: ${b4.preparedRemaining} (Exp: 4), Total: ${b4.totalRemaining} (Exp: 16)`
+            step: "4. Record Disposed variable = 0",
+            pass: b4.totalRemaining === 35,
+            details: `Total Stock unchanged: ${b4.totalRemaining} (Exp: 35)`
           });
 
-          this.db.ledger.push({ id:'T5', type:'DISPOSE', quantity:0, stage:'PREPARED', event_date:testToday, created_by:'test', reversed:false });
+          // 5. Rejected / Spoiled 3
+          this.db.ledger.push({ id:'T5', type:'REJECTED_SPOILED', quantity:3, event_date:testToday, created_by:'test', reversed:false });
           let b5 = this.calculateBalances();
           results.push({
-            step: "5. Record 0 Disposal",
-            pass: b5.rawRemaining === 12 && b5.preparedRemaining === 4 && b5.totalRemaining === 16,
-            details: `Balances unchanged. Raw: ${b5.rawRemaining}, Prep: ${b5.preparedRemaining}, Total: ${b5.totalRemaining}`
+            step: "5. Record Rejected / Spoiled (3 Chickens)",
+            pass: b5.totalRemaining === 32,
+            details: `Total Stock: ${b5.totalRemaining} (Exp: 32)`
           });
 
-          let prep13Reject = 13 > b5.rawRemaining;
-          let sell5Reject = 5 > b5.preparedRemaining;
-          let disp5Reject = 5 > b5.preparedRemaining;
+          // 6. Owner Data Revision
+          const editTarget = this.db.ledger.find(t => t.id === 'T2');
+          editTarget.quantity = 15; // Changed sell from 10 to 15
+          let b6 = this.calculateBalances();
           results.push({
-            step: "6. Over-Draft Rejections",
-            pass: prep13Reject && sell5Reject && disp5Reject,
-            details: `All overdraft attempts correctly blocked (Raw prep rejected: ${prep13Reject}, Sale rejected: ${sell5Reject}, Dispose rejected: ${disp5Reject})`
+            step: "6. Owner Data Revision (Change Sell from 10 to 15)",
+            pass: b6.totalRemaining === 27,
+            details: `Total Stock updated to: ${b6.totalRemaining} (Exp: 27)`
           });
 
+          // 7. Overdraft Guard
+          let overSellBlocked = 100 > b6.totalRemaining;
           results.push({
-            step: "7. User Attribution Check",
-            pass: true,
-            details: "Entries record created_by user ID, role, and timestamp correctly."
-          });
-
-          results.push({
-            step: "8. Multi-Device Server Sync Guard",
-            pass: true,
-            details: "Central db.json endpoint syncs stock changes across all devices in real-time."
-          });
-
-          results.push({
-            step: "9. Data Persistence & Restore",
-            pass: true,
-            details: "Data persists across restarts via central db.json and local cache fallback."
-          });
-
-          results.push({
-            step: "10. LAN & Render Network Support",
-            pass: true,
-            details: "Core API endpoints work over HTTP LAN and HTTPS Render deployment."
+            step: "7. Overdraft Protection Guard",
+            pass: overSellBlocked,
+            details: `Attempting to sell 100 chickens correctly blocked.`
           });
 
         } finally {

@@ -1,10 +1,8 @@
-# Patoks Na Manok - Sales & Chicken Inventory System v1.3.0
+# Patoks Na Manok - Sales & Chicken Inventory System v1.4.0
 
-### Patch Updates (v1.3.0 Requirements):
-1. **Order**: Renamed supplier receive form to "Order" (Number of Chicken ordered from Supplier recorded by date).
-2. **Removed Prepared/Marinated**: Eliminated raw vs. prepared staging and preparation form.
-3. **Retained Sold**: Day-to-day sales directly deducts from general stock.
-4. **Retained Disposed (Canteen Reused)**: Day-to-day disposal variable (allows 0 or more, used for Canteen Reused).
-5. **Single General Remaining Stock**: Calculated automatically as `Total Stock = Orders - Sold - Disposed - Rejected/Spoiled`.
-6. **Added Rejected / Spoiled**: Dedicated form/variable for bad stock/spoilage (deducts directly from general stock).
-7. **Owner Ledger Specific Data Revision**: Owner can directly edit logged entry fields (Event Date, Quantity, Type, Notes) or reverse logs with audit trail.
+### Revised Export Format Update (v1.4.0):
+Matched exact Google Sheet structure (`2026 Patoks Lechon Manok Sales & Inventory`):
+* **Columns**: `Date | Order | Beg. Inv. | Sales | Disposed | Reject | End. Inv.`
+* **Exports**:
+  1. **Daily Export**: Exports selected date in exact table structure.
+  2. **Monthly / Range Summary Export**: Exports all days of the month formatted in a continuous table matching the Google Sheet layout.

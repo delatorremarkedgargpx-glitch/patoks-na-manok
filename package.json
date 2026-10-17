@@ -1,12 +1,12 @@
 {
   "name": "patoks-na-manok",
-  "version": "1.3.0",
-  "description": "Patoks Na Manok - POS & Chicken Inventory System v1.3.0 with Order, Sold, Disposed (Canteen), Rejected/Spoiled, Single General Stock & Owner Ledger Revision Control",
+  "version": "1.4.0",
+  "description": "Patoks Na Manok - POS & Chicken Inventory System v1.4.0 with Google Sheet format export (Date, Order, Beg. Inv., Sales, Disposed, Reject, End. Inv.)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
-  "keywords": ["inventory", "sales", "chicken", "restaurant", "pos", "multi-device", "ledger-revision"],
+  "keywords": ["inventory", "sales", "chicken", "restaurant", "pos", "multi-device", "export-format"],
   "author": "Senior Full-Stack Developer",
   "license": "ISC",
   "dependencies": {}

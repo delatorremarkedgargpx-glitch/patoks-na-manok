@@ -1,8 +1,7 @@
-// server.js - Patoks Na Manok Multi-Device Shared Sync Server v1.3.0
+// server.js - Patoks Na Manok Multi-Device Shared Sync Server v1.4.0
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const os = require('os');
 
 const PORT = process.env.PORT || 3000;
 const HOST = '0.0.0.0';
@@ -99,7 +98,7 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT, HOST, () => {
   console.log(`==================================================`);
-  console.log(`  Patoks Na Manok System v1.3.0 Running!`);
+  console.log(`  Patoks Na Manok System v1.4.0 Running!`);
   console.log(`==================================================`);
   console.log(`Local: http://localhost:${PORT}`);
 });

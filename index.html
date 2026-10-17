@@ -52,7 +52,7 @@
         </div>
         <div>
           <h1 class="font-black text-xl tracking-tight text-white flex items-center gap-2">
-            PATOKS NA MANOK <span class="text-xs bg-flame-700/80 text-flame-100 font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider">POS & Inventory v1.3.0</span>
+            PATOKS NA MANOK <span class="text-xs bg-flame-700/80 text-flame-100 font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider">POS & Inventory v1.4.0</span>
           </h1>
           <p class="text-xs text-slate-400" id="manila-clock-display">Asia/Manila: Loading...</p>
         </div>
@@ -108,7 +108,7 @@
           </div>
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Opening General Chicken Stock</label>
-            <input type="number" id="setup-stock" min="0" value="0" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-flame-500 focus:outline-none">
+            <input type="number" step="0.5" id="setup-stock" min="0" value="0" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-flame-500 focus:outline-none">
           </div>
 
           <button type="submit" class="w-full bg-flame-600 hover:bg-flame-700 text-white font-bold py-2.5 rounded-lg transition shadow-md shadow-flame-600/30 text-sm mt-4">
@@ -188,7 +188,7 @@
             <span id="dash-total-stock" class="text-5xl font-black text-slate-900">0</span>
             <span class="text-sm font-bold bg-flame-50 text-flame-700 px-3 py-1 rounded-full border border-flame-200">Chickens Remaining</span>
           </div>
-          <p class="text-xs text-slate-400 mt-2">Calculated automatically: Total Orders - Total Sold - Disposed (Canteen) - Rejected/Spoiled.</p>
+          <p class="text-xs text-slate-400 mt-2">Calculated automatically: Beg. Inv + Order - Sales - Disposed - Reject = End. Inv.</p>
         </div>
 
         <!-- Today's Activity Cards -->
@@ -246,7 +246,7 @@
                 <label class="block text-xs font-bold text-slate-600 mb-1">Number of Chicken Ordered</label>
                 <div class="flex items-center gap-2">
                   <button type="button" onclick="app.stepQty(this, -1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">-</button>
-                  <input type="number" name="quantity" min="1" value="1" required class="w-full py-2 border rounded-xl text-center font-black text-xl text-slate-900 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                  <input type="number" step="0.5" name="quantity" min="0.5" value="1" required class="w-full py-2 border rounded-xl text-center font-black text-xl text-slate-900 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                   <button type="button" onclick="app.stepQty(this, 1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">+</button>
                 </div>
               </div>
@@ -278,10 +278,10 @@
               </div>
 
               <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1">Quantity Sold</label>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Quantity Sold (Supports half-chickens e.g. 18.5)</label>
                 <div class="flex items-center gap-2">
                   <button type="button" onclick="app.stepQty(this, -1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">-</button>
-                  <input type="number" name="quantity" min="1" value="1" required class="w-full py-2 border rounded-xl text-center font-black text-xl text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                  <input type="number" step="0.5" name="quantity" min="0.5" value="1" required class="w-full py-2 border rounded-xl text-center font-black text-xl text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                   <button type="button" onclick="app.stepQty(this, 1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">+</button>
                 </div>
               </div>
@@ -316,7 +316,7 @@
                 <label class="block text-xs font-bold text-slate-600 mb-1">Quantity Disposed for Canteen (Can be 0)</label>
                 <div class="flex items-center gap-2">
                   <button type="button" onclick="app.stepQty(this, -1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">-</button>
-                  <input type="number" name="quantity" min="0" value="0" required class="w-full py-2 border rounded-xl text-center font-black text-xl text-slate-900 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                  <input type="number" step="0.5" name="quantity" min="0" value="0" required class="w-full py-2 border rounded-xl text-center font-black text-xl text-slate-900 focus:ring-2 focus:ring-amber-500 focus:outline-none">
                   <button type="button" onclick="app.stepQty(this, 1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">+</button>
                 </div>
               </div>
@@ -351,7 +351,7 @@
                 <label class="block text-xs font-bold text-slate-600 mb-1">Quantity Rejected / Spoiled</label>
                 <div class="flex items-center gap-2">
                   <button type="button" onclick="app.stepQty(this, -1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">-</button>
-                  <input type="number" name="quantity" min="1" value="1" required class="w-full py-2 border rounded-xl text-center font-black text-xl text-slate-900 focus:ring-2 focus:ring-red-500 focus:outline-none">
+                  <input type="number" step="0.5" name="quantity" min="0.5" value="1" required class="w-full py-2 border rounded-xl text-center font-black text-xl text-slate-900 focus:ring-2 focus:ring-red-500 focus:outline-none">
                   <button type="button" onclick="app.stepQty(this, 1)" class="w-12 h-12 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xl rounded-xl border border-slate-300 flex items-center justify-center transition active:scale-95 touch-manipulation">+</button>
                 </div>
               </div>
@@ -376,57 +376,54 @@
         <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
           <div class="flex flex-wrap items-center justify-between gap-4 border-b pb-4">
             <div>
-              <h3 class="font-bold text-slate-900 text-lg">Daily Inventory Summary Report</h3>
-              <p class="text-xs text-slate-500">Track opening balances, daily movements (Orders, Sold, Disposed, Rejected), and closing stocks.</p>
+              <h3 class="font-bold text-slate-900 text-lg">Daily & Monthly Inventory Summary Report</h3>
+              <p class="text-xs text-slate-500">Track opening balances, daily movements (Orders, Sales, Disposed, Reject), and ending stocks matching the Google Sheet format.</p>
             </div>
             <div class="flex flex-wrap items-center gap-2">
               <label class="text-xs font-bold text-slate-600">Select Date:</label>
               <input type="date" id="summary-date-picker" onchange="app.renderDailySummary()" class="px-3 py-1.5 border rounded-lg text-sm font-semibold">
-              <button onclick="app.exportDailySummaryCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm flex items-center gap-1.5">
-                <i class="fa-solid fa-file-excel"></i> Export Daily CSV
+              
+              <button onclick="app.exportGoogleSheetFormatCSV('daily')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm flex items-center gap-1.5">
+                <i class="fa-solid fa-file-excel"></i> Export Selected Day Sheet CSV
+              </button>
+              
+              <button onclick="app.exportGoogleSheetFormatCSV('monthly')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm flex items-center gap-1.5">
+                <i class="fa-solid fa-table"></i> Export Entire Month Sheet CSV
               </button>
             </div>
           </div>
 
-          <!-- Summary Sheet View -->
+          <!-- Summary Sheet View (Matches Google Sheet Layout) -->
           <div class="border rounded-2xl p-6 bg-slate-50/50 space-y-4">
             <h4 class="font-bold text-sm text-slate-800 border-b pb-2 flex justify-between items-center">
-              <span>Daily Movement Breakdown</span>
+              <span>Daily Breakdown (Google Sheet Format: Date | Order | Beg. Inv. | Sales | Disposed | Reject | End. Inv.)</span>
               <span id="sum-date-badge" class="text-xs bg-slate-200 text-slate-800 px-2.5 py-0.5 rounded-full font-semibold"></span>
             </h4>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-              <div class="flex justify-between p-3 bg-white rounded-xl border">
-                <span class="font-medium text-slate-600">Opening Balance:</span>
-                <strong id="sum-opening-bal" class="text-sm text-slate-900">0</strong>
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-3 text-xs">
+              <div class="p-3 bg-white rounded-xl border text-center">
+                <span class="font-bold text-slate-500 block uppercase">Beg. Inv.</span>
+                <strong id="sum-opening-bal" class="text-lg text-slate-900">0</strong>
               </div>
-              <div class="flex justify-between p-3 bg-white rounded-xl border">
-                <span class="font-medium text-blue-700">+ Supplier Orders:</span>
-                <strong id="sum-ordered-qty" class="text-sm text-blue-700">0</strong>
+              <div class="p-3 bg-white rounded-xl border text-center">
+                <span class="font-bold text-blue-600 block uppercase">+ Order</span>
+                <strong id="sum-ordered-qty" class="text-lg text-blue-600">0</strong>
               </div>
-              <div class="flex justify-between p-3 bg-white rounded-xl border">
-                <span class="font-medium text-emerald-700">- Chicken Sold:</span>
-                <strong id="sum-sold-qty" class="text-sm text-emerald-700">0</strong>
+              <div class="p-3 bg-white rounded-xl border text-center">
+                <span class="font-bold text-emerald-600 block uppercase">- Sales</span>
+                <strong id="sum-sold-qty" class="text-lg text-emerald-600">0</strong>
               </div>
-              <div class="flex justify-between p-3 bg-white rounded-xl border">
-                <span class="font-medium text-amber-700">- Disposed (Canteen Reused):</span>
-                <strong id="sum-disposed-qty" class="text-sm text-amber-700">0</strong>
+              <div class="p-3 bg-white rounded-xl border text-center">
+                <span class="font-bold text-amber-600 block uppercase">- Disposed</span>
+                <strong id="sum-disposed-qty" class="text-lg text-amber-600">0</strong>
               </div>
-              <div class="flex justify-between p-3 bg-white rounded-xl border col-span-1 md:col-span-2">
-                <span class="font-medium text-red-700">- Rejected / Spoiled:</span>
-                <strong id="sum-rejected-qty" class="text-sm text-red-700">0</strong>
+              <div class="p-3 bg-white rounded-xl border text-center">
+                <span class="font-bold text-red-600 block uppercase">- Reject</span>
+                <strong id="sum-rejected-qty" class="text-lg text-red-600">0</strong>
               </div>
-            </div>
-
-            <!-- Total Closing Stock -->
-            <div class="bg-slate-900 text-white rounded-xl p-5 flex justify-between items-center mt-4">
-              <div>
-                <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Closing General Stock Balance</p>
-                <p class="text-xs text-slate-300 mt-0.5">Opening + Ordered - Sold - Disposed - Rejected/Spoiled</p>
-              </div>
-              <div class="text-right">
-                <span id="sum-closing-bal" class="text-4xl font-black text-flame-500">0</span>
-                <span class="text-xs text-slate-400 block">Chickens</span>
+              <div class="p-3 bg-slate-900 text-white rounded-xl text-center border border-slate-800">
+                <span class="font-bold text-flame-400 block uppercase">= End. Inv.</span>
+                <strong id="sum-closing-bal" class="text-xl text-flame-400">0</strong>
               </div>
             </div>
           </div>
@@ -446,8 +443,8 @@
               <label class="text-xs font-bold text-slate-600">Filter Date:</label>
               <input type="date" id="ledger-filter-date" onchange="app.renderLedgerTable()" class="px-3 py-1.5 border rounded-lg text-sm">
               <button onclick="document.getElementById('ledger-filter-date').value=''; app.renderLedgerTable()" class="text-xs text-slate-500 hover:text-slate-800 underline mr-2">Clear</button>
-              <button onclick="app.exportLedgerCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm flex items-center gap-1.5">
-                <i class="fa-solid fa-file-csv"></i> Export CSV / Excel
+              <button onclick="app.exportGoogleSheetFormatCSV('monthly')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm flex items-center gap-1.5">
+                <i class="fa-solid fa-file-csv"></i> Export Google Sheet CSV
               </button>
             </div>
           </div>
@@ -561,7 +558,7 @@
 
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">Quantity</label>
-              <input type="number" id="edit-quantity" min="0" required class="w-full px-3 py-2 border rounded-lg text-sm font-bold">
+              <input type="number" step="0.5" id="edit-quantity" min="0" required class="w-full px-3 py-2 border rounded-lg text-sm font-bold">
             </div>
 
             <div>
@@ -612,7 +609,7 @@
 
   <!-- Footer -->
   <footer class="bg-white border-t py-4 text-center text-xs text-slate-400 mt-auto">
-    Patoks Na Manok POS & Inventory System &bull; Multi-Device Server Sync Edition v1.3.0
+    Patoks Na Manok POS & Inventory System &bull; Multi-Device Server Sync Edition v1.4.0
   </footer>
 
   <!-- SYSTEM JAVASCRIPT LOGIC -->
@@ -627,8 +624,8 @@
       stepQty(btn, amount) {
         const input = btn.parentNode.querySelector('input[type="number"]');
         if (!input) return;
-        const current = parseInt(input.value) || 0;
-        const min = parseInt(input.getAttribute('min')) || 0;
+        const current = parseFloat(input.value) || 0;
+        const min = parseFloat(input.getAttribute('min')) || 0;
         const updated = current + amount;
         if (updated >= min) {
           input.value = updated;
@@ -777,7 +774,7 @@
         e.preventDefault();
         const username = document.getElementById('setup-username').value.trim();
         const password = document.getElementById('setup-password').value;
-        const stockQty = parseInt(document.getElementById('setup-stock').value) || 0;
+        const stockQty = parseFloat(document.getElementById('setup-stock').value) || 0;
 
         const hashedPassword = await this.hashPassword(password);
         
@@ -901,13 +898,40 @@
         };
       }
 
+      getDayMetrics(targetDate) {
+        let begInv = 0;
+        let order = 0, sales = 0, disposed = 0, reject = 0;
+
+        (this.db.ledger || []).forEach(tx => {
+          if (tx.reversed) return;
+          const qty = Number(tx.quantity) || 0;
+
+          if (tx.event_date < targetDate) {
+            if (['OPENING', 'OPENING_RAW', 'OPENING_PREPARED', 'ORDER', 'RECEIVE'].includes(tx.type)) {
+              begInv += qty;
+            } else if (['SELL', 'DISPOSE', 'REJECTED_SPOILED'].includes(tx.type)) {
+              begInv -= qty;
+            }
+          } else if (tx.event_date === targetDate) {
+            if (tx.type === 'OPENING' || tx.type === 'OPENING_RAW' || tx.type === 'OPENING_PREPARED') begInv += qty;
+            if (tx.type === 'ORDER' || tx.type === 'RECEIVE') order += qty;
+            if (tx.type === 'SELL') sales += qty;
+            if (tx.type === 'DISPOSE') disposed += qty;
+            if (tx.type === 'REJECTED_SPOILED') reject += qty;
+          }
+        });
+
+        const endInv = Math.max(0, begInv + order - sales - disposed - reject);
+        return { date: targetDate, begInv, order, sales, disposed, reject, endInv };
+      }
+
       async handleTransaction(e, type) {
         e.preventDefault();
         const form = e.target;
         const formData = new FormData(form);
 
         const event_date = formData.get('event_date');
-        const quantity = parseInt(formData.get('quantity')) || 0;
+        const quantity = parseFloat(formData.get('quantity')) || 0;
         const notes = formData.get('notes') || '';
 
         if (!event_date) {
@@ -1003,7 +1027,7 @@
         const txId = document.getElementById('edit-tx-id').value;
         const newDate = document.getElementById('edit-event-date').value;
         const newType = document.getElementById('edit-type').value;
-        const newQty = parseInt(document.getElementById('edit-quantity').value) || 0;
+        const newQty = parseFloat(document.getElementById('edit-quantity').value) || 0;
         const newNotes = document.getElementById('edit-notes').value.trim();
         const revisionReason = document.getElementById('edit-revision-reason').value.trim();
 
@@ -1097,155 +1121,62 @@
         const dateBadge = document.getElementById('sum-date-badge');
         if (dateBadge) dateBadge.innerText = selDate;
 
-        let openBal = 0;
-        let ordered = 0, sold = 0, disposed = 0, rejected = 0;
-
-        (this.db.ledger || []).forEach(tx => {
-          if (tx.reversed) return;
-
-          const qty = Number(tx.quantity) || 0;
-          if (tx.event_date < selDate) {
-            if (['OPENING', 'OPENING_RAW', 'OPENING_PREPARED', 'ORDER', 'RECEIVE'].includes(tx.type)) {
-              openBal += qty;
-            } else if (['SELL', 'DISPOSE', 'REJECTED_SPOILED'].includes(tx.type)) {
-              openBal -= qty;
-            }
-          } else if (tx.event_date === selDate) {
-            if (tx.type === 'OPENING' || tx.type === 'OPENING_RAW' || tx.type === 'OPENING_PREPARED') openBal += qty;
-            if (tx.type === 'ORDER' || tx.type === 'RECEIVE') ordered += qty;
-            if (tx.type === 'SELL') sold += qty;
-            if (tx.type === 'DISPOSE') disposed += qty;
-            if (tx.type === 'REJECTED_SPOILED') rejected += qty;
-          }
-        });
-
-        const closingBal = Math.max(0, openBal + ordered - sold - disposed - rejected);
+        const m = this.getDayMetrics(selDate);
 
         const setVal = (id, val) => {
           const el = document.getElementById(id);
           if (el) el.innerText = val;
         };
 
-        setVal('sum-opening-bal', openBal);
-        setVal('sum-ordered-qty', ordered);
-        setVal('sum-sold-qty', sold);
-        setVal('sum-disposed-qty', disposed);
-        setVal('sum-rejected-qty', rejected);
-        setVal('sum-closing-bal', closingBal);
+        setVal('sum-opening-bal', m.begInv);
+        setVal('sum-ordered-qty', m.order);
+        setVal('sum-sold-qty', m.sales);
+        setVal('sum-disposed-qty', m.disposed);
+        setVal('sum-rejected-qty', m.reject);
+        setVal('sum-closing-bal', m.endInv);
       }
 
-      exportDailySummaryCSV() {
+      // REVISED EXPORT FORMAT: Exact Google Sheet Layout (Date | Order | Beg. Inv. | Sales | Disposed | Reject | End. Inv.)
+      exportGoogleSheetFormatCSV(mode = 'daily') {
         const selDate = document.getElementById('summary-date-picker')?.value || this.getManilaDate();
-        
-        let openBal = 0;
-        let ordered = 0, sold = 0, disposed = 0, rejected = 0;
-
-        const dayEntries = [];
-
-        (this.db.ledger || []).forEach(tx => {
-          if (tx.reversed) return;
-
-          const qty = Number(tx.quantity) || 0;
-          if (tx.event_date < selDate) {
-            if (['OPENING', 'OPENING_RAW', 'OPENING_PREPARED', 'ORDER', 'RECEIVE'].includes(tx.type)) {
-              openBal += qty;
-            } else if (['SELL', 'DISPOSE', 'REJECTED_SPOILED'].includes(tx.type)) {
-              openBal -= qty;
-            }
-          } else if (tx.event_date === selDate) {
-            dayEntries.push(tx);
-            if (tx.type === 'OPENING' || tx.type === 'OPENING_RAW' || tx.type === 'OPENING_PREPARED') openBal += qty;
-            if (tx.type === 'ORDER' || tx.type === 'RECEIVE') ordered += qty;
-            if (tx.type === 'SELL') sold += qty;
-            if (tx.type === 'DISPOSE') disposed += qty;
-            if (tx.type === 'REJECTED_SPOILED') rejected += qty;
-          }
-        });
-
-        const closingBal = Math.max(0, openBal + ordered - sold - disposed - rejected);
-
         const lines = [];
-        lines.push(`"PATOKS NA MANOK - DAILY INVENTORY SUMMARY REPORT"`);
-        lines.push(`"Report Date:","${selDate}"`);
-        lines.push(`"Generated At:","${this.getManilaTimestamp()}"`);
-        lines.push(``);
-        lines.push(`"Metric / Variable","Quantity (Chickens)"`);
-        lines.push(`"Opening Balance",${openBal}`);
-        lines.push(`"+ Order (Supplier Delivered)",${ordered}`);
-        lines.push(`"- Number of Chicken Sold",-${sold}`);
-        lines.push(`"- Disposed (Canteen Reused)",-${disposed}`);
-        lines.push(`"- Rejected / Spoiled",-${rejected}`);
-        lines.push(`"= General Remaining Stocks",${closingBal}`);
-        lines.push(``);
-        lines.push(`"DAILY TRANSACTIONS LOG (${selDate})"`);
-        lines.push(`"Transaction ID","Type","Quantity","Recorded By","Created At","Notes"`);
 
-        if (dayEntries.length === 0) {
-          lines.push(`"No transactions recorded for this date.",,,,,`);
+        // Exact Google Sheet Header Layout
+        lines.push(`"Date","Order","Beg. Inv.","Sales","Disposed","Reject","End. Inv."`);
+
+        if (mode === 'daily') {
+          const m = this.getDayMetrics(selDate);
+          lines.push(`"${m.date}",${m.order},${m.begInv},${m.sales},${m.disposed},${m.reject},${m.endInv}`);
         } else {
-          dayEntries.forEach(tx => {
-            lines.push(`"${tx.id}","${tx.type}",${tx.quantity},"${tx.created_by}","${tx.created_at}","${(tx.notes || '').replace(/"/g, '""')}"`);
-          });
+          // Monthly export: Extract unique dates from ledger or month range
+          const [yr, mo] = selDate.split('-');
+          const year = parseInt(yr);
+          const month = parseInt(mo);
+          const daysInMonth = new Date(year, month, 0).getDate();
+
+          for (let d = 1; d <= daysInMonth; d++) {
+            const dayStr = `${yr}-${mo.padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            const m = this.getDayMetrics(dayStr);
+            // Only output rows that have activity or balance
+            lines.push(`"${d}",${m.order},${m.begInv},${m.sales},${m.disposed},${m.reject},${m.endInv}`);
+          }
         }
 
         const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + lines.join('\n');
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement('a');
         link.setAttribute('href', encodedUri);
-        link.setAttribute('download', `Patoks_Manok_Daily_Summary_${selDate}.csv`);
+        
+        const fileName = mode === 'daily' 
+          ? `Patoks_Lechon_Manok_Sales_Inventory_${selDate}.csv`
+          : `Patoks_Lechon_Manok_Sales_Inventory_Month_${selDate.substring(0,7)}.csv`;
+
+        link.setAttribute('download', fileName);
         document.body.appendChild(link);
         link.click();
         link.remove();
 
-        this.showAlert('success', 'Daily Report Downloaded', `Daily Summary for ${selDate} exported to CSV.`);
-      }
-
-      exportLedgerCSV() {
-        if (!this.db || !this.db.ledger || this.db.ledger.length === 0) {
-          return this.showAlert('danger', 'Export Error', 'No ledger entries to export.');
-        }
-
-        const filterDate = document.getElementById('ledger-filter-date')?.value;
-        let rows = [...this.db.ledger];
-
-        if (filterDate) {
-          rows = rows.filter(r => r.event_date === filterDate);
-        }
-
-        if (rows.length === 0) {
-          return this.showAlert('danger', 'Export Error', `No entries found for date ${filterDate}.`);
-        }
-
-        const lines = [];
-        lines.push(`"PATOKS NA MANOK - STOCK LEDGER EXPORT"`);
-        lines.push(`"Filter Date:","${filterDate || 'ALL DATES'}"`);
-        lines.push(`"Export Timestamp:","${this.getManilaTimestamp()}"`);
-        lines.push(``);
-        lines.push(`"Transaction ID","Event Date","Type","Quantity","Recorded By","Recorded At","Notes","Status"`);
-
-        rows.forEach(tx => {
-          lines.push([
-            `"${tx.id}"`,
-            `"${tx.event_date}"`,
-            `"${tx.type}"`,
-            tx.quantity,
-            `"${tx.created_by}"`,
-            `"${tx.created_at}"`,
-            `"${(tx.notes || '').replace(/"/g, '""')}"`,
-            `"${tx.reversed ? 'REVERSED' : 'ACTIVE'}"`
-          ].join(','));
-        });
-
-        const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + lines.join('\n');
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement('a');
-        link.setAttribute('href', encodedUri);
-        link.setAttribute('download', filterDate ? `Patoks_Manok_Ledger_${filterDate}.csv` : `Patoks_Manok_Ledger_All_${this.getManilaDate()}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-
-        this.showAlert('success', 'Ledger Exported', 'Stock ledger exported as CSV for Sheets/Excel.');
+        this.showAlert('success', 'Export Completed', `Exported spreadsheet file in revised Google Sheet format (${mode.toUpperCase()}).`);
       }
 
       renderLedgerTable() {
@@ -1367,65 +1298,38 @@
           
           // 1. Order 50
           this.db.ledger.push({ id:'T1', type:'ORDER', quantity:50, event_date:testToday, created_by:'test', reversed:false });
-          let b1 = this.calculateBalances();
+          let m1 = this.getDayMetrics(testToday);
           results.push({
             step: "1. Record Supplier Order (50 Chickens)",
-            pass: b1.totalRemaining === 50,
-            details: `Total Stock: ${b1.totalRemaining} (Exp: 50)`
+            pass: m1.endInv === 50 && m1.order === 50,
+            details: `Order: ${m1.order}, End. Inv.: ${m1.endInv}`
           });
 
-          // 2. Sell 10
-          this.db.ledger.push({ id:'T2', type:'SELL', quantity:10, event_date:testToday, created_by:'test', reversed:false });
-          let b2 = this.calculateBalances();
+          // 2. Sell 18.5 (Supports fractional/half chicken sales)
+          this.db.ledger.push({ id:'T2', type:'SELL', quantity:18.5, event_date:testToday, created_by:'test', reversed:false });
+          let m2 = this.getDayMetrics(testToday);
           results.push({
-            step: "2. Record Chicken Sold (10 Chickens)",
-            pass: b2.totalRemaining === 40,
-            details: `Total Stock: ${b2.totalRemaining} (Exp: 40)`
+            step: "2. Record Chicken Sold (18.5 Chickens)",
+            pass: m2.endInv === 31.5 && m2.sales === 18.5,
+            details: `Sales: ${m2.sales}, End. Inv.: ${m2.endInv}`
           });
 
-          // 3. Disposed 5 (Canteen Reused)
-          this.db.ledger.push({ id:'T3', type:'DISPOSE', quantity:5, event_date:testToday, created_by:'test', reversed:false });
-          let b3 = this.calculateBalances();
+          // 3. Disposed 2.5 (Canteen Reused)
+          this.db.ledger.push({ id:'T3', type:'DISPOSE', quantity:2.5, event_date:testToday, created_by:'test', reversed:false });
+          let m3 = this.getDayMetrics(testToday);
           results.push({
-            step: "3. Record Disposed - Canteen Reused (5 Chickens)",
-            pass: b3.totalRemaining === 35,
-            details: `Total Stock: ${b3.totalRemaining} (Exp: 35)`
+            step: "3. Record Disposed - Canteen Reused (2.5 Chickens)",
+            pass: m3.endInv === 29 && m3.disposed === 2.5,
+            details: `Disposed: ${m3.disposed}, End. Inv.: ${m3.endInv}`
           });
 
-          // 4. Disposed 0 (Variable = 0)
-          this.db.ledger.push({ id:'T4', type:'DISPOSE', quantity:0, event_date:testToday, created_by:'test', reversed:false });
-          let b4 = this.calculateBalances();
+          // 4. Reject 8
+          this.db.ledger.push({ id:'T4', type:'REJECTED_SPOILED', quantity:8, event_date:testToday, created_by:'test', reversed:false });
+          let m4 = this.getDayMetrics(testToday);
           results.push({
-            step: "4. Record Disposed variable = 0",
-            pass: b4.totalRemaining === 35,
-            details: `Total Stock unchanged: ${b4.totalRemaining} (Exp: 35)`
-          });
-
-          // 5. Rejected / Spoiled 3
-          this.db.ledger.push({ id:'T5', type:'REJECTED_SPOILED', quantity:3, event_date:testToday, created_by:'test', reversed:false });
-          let b5 = this.calculateBalances();
-          results.push({
-            step: "5. Record Rejected / Spoiled (3 Chickens)",
-            pass: b5.totalRemaining === 32,
-            details: `Total Stock: ${b5.totalRemaining} (Exp: 32)`
-          });
-
-          // 6. Owner Data Revision
-          const editTarget = this.db.ledger.find(t => t.id === 'T2');
-          editTarget.quantity = 15; // Changed sell from 10 to 15
-          let b6 = this.calculateBalances();
-          results.push({
-            step: "6. Owner Data Revision (Change Sell from 10 to 15)",
-            pass: b6.totalRemaining === 27,
-            details: `Total Stock updated to: ${b6.totalRemaining} (Exp: 27)`
-          });
-
-          // 7. Overdraft Guard
-          let overSellBlocked = 100 > b6.totalRemaining;
-          results.push({
-            step: "7. Overdraft Protection Guard",
-            pass: overSellBlocked,
-            details: `Attempting to sell 100 chickens correctly blocked.`
+            step: "4. Record Reject / Spoiled (8 Chickens)",
+            pass: m4.endInv === 21 && m4.reject === 8,
+            details: `Reject: ${m4.reject}, End. Inv.: ${m4.endInv} (Matches Day 1 sample arithmetic: Beg 0 + Ord 50 - Sales 18.5 - Disp 2.5 - Rej 8 = End 21)`
           });
 
         } finally {

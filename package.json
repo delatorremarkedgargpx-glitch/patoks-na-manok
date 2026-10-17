@@ -1,12 +1,12 @@
 {
   "name": "patoks-na-manok",
-  "version": "1.0.0",
-  "description": "Patoks Na Manok - Sales & Chicken Inventory System",
+  "version": "1.1.0",
+  "description": "Patoks Na Manok - Multi-Device Sales & Chicken Inventory System",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
-  "keywords": ["inventory", "sales", "chicken", "restaurant", "pos"],
+  "keywords": ["inventory", "sales", "chicken", "restaurant", "pos", "multi-device"],
   "author": "Senior Full-Stack Developer",
   "license": "ISC",
   "dependencies": {}

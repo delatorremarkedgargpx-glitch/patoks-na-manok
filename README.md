@@ -1,27 +1,13 @@
-# Patoks Na Manok - Sales & Chicken Inventory System
+# Patoks Na Manok - Multi-Device Sales & Chicken Inventory System
 
-A simple, dependable browser-based sales and chicken inventory system designed for grilled chicken businesses.
+Now updated with **Real-Time Multi-Device Sync** via central server database (`db.json`)!
 
-## Quick Start (Local LAN Hosting)
-1. Install [Node.js](https://nodejs.org/).
-2. Open Terminal / Command Prompt in this directory.
-3. Run:
-   ```bash
-   node server.js
-   ```
-4. Access the web app in your browser at `http://localhost:3000` or via the LAN IP displayed in terminal.
+## What's New in v1.1.0 (Multi-Device Sync):
+- Central Database on Server (`db.json`): Stores all inventory and transaction records in one central file.
+- Automatic 3-Second Background Refresh: Changes entered by the Cashier on one device automatically update on the Owner's screen within 3 seconds.
+- Cross-Device Access: Works simultaneously on phones, tablets, and computers connected via LAN or Render.com URL.
 
-## Deploying to Render.com
-1. Create a GitHub repository and upload `index.html`, `server.js`, and `package.json`.
-2. Log into [Render.com](https://render.com) and create a **New Web Service**.
-3. Connect your GitHub repository.
-4. Set runtime to **Node**, start command to `node server.js`.
-5. Deploy and access your live URL!
-
-## System Features
-- Immutable Transaction Ledger (Raw, Prepared, Total Chicken Tracking).
-- Role-Based Access Control (Owner & Cashier accounts with secure PBKDF2/SHA-256 hashing).
-- Asia/Manila Timezone Business Date & Timestamping.
-- Reversals & Audit Logs for record corrections.
-- Built-in Automated 10-Step Acceptance Test Runner.
-- Offline-ready Local Storage & Data Export/Import (JSON Backup & Restore).
+## How to Update on GitHub & Render:
+1. Replace `index.html`, `server.js`, and `package.json` in your GitHub repository.
+2. Commit changes.
+3. Render.com will automatically detect the commit and re-deploy your live website within 1-2 minutes!
